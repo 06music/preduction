@@ -184,7 +184,6 @@
 </div>
 
 
-            <!-- Leagues Card -->
          <!-- Must-Watch Matches -->
 <!-- Must-Watch Matches -->
 <div v-if="mustWatchMatches.length" class="bg-white border border-gray-100 rounded-2xl shadow-sm mt-6 overflow-hidden">
@@ -260,6 +259,76 @@
 </div>
 
 
+<!-- Smart Combo Builder -->
+<div class="bg-white border border-indigo-100 p-6 rounded-2xl shadow-md space-y-6">
+  <h2 class="text-lg font-bold text-indigo-800 flex items-center gap-2">🧠 Smart Combo Builder</h2>
+
+  <!-- Controls -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <label class="text-sm font-medium text-gray-600">Risk Level</label>
+      <select v-model="comboRisk" class="mt-1 w-full rounded-lg border-gray-200 shadow-sm text-sm">
+        <option value="conservative">Conservative (70%+)</option>
+        <option value="balanced">Balanced (60%+)</option>
+        <option value="risky">Risky (50%+)</option>
+      </select>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-600">Tips to Generate</label>
+      <select v-model="comboSize" class="mt-1 w-full rounded-lg border-gray-200 shadow-sm text-sm">
+        <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+      </select>
+    </div>
+    <div class="flex items-end">
+      <button @click="generateSmartCombo" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm">
+        🎲 Generate Combo
+      </button>
+    </div>
+  </div>
+
+  <!-- Rank Filter -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="text-sm font-medium text-gray-600">Max Home Rank</label>
+      <input type="number" v-model.number="homeRankLimit" min="1" max="100" class="mt-1 w-full rounded-lg border-gray-200 shadow-sm text-sm" />
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-600">Max Away Rank</label>
+      <input type="number" v-model.number="awayRankLimit" min="1" max="100" class="mt-1 w-full rounded-lg border-gray-200 shadow-sm text-sm" />
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div v-if="smartCombo.length" class="bg-indigo-50 p-5 border border-indigo-200 rounded-xl space-y-4">
+    <h3 class="font-semibold text-indigo-800">Your Combo Picks ({{ smartCombo.length }})</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div v-for="match in smartCombo" :key="match.id" class="bg-white border rounded-xl p-4 shadow-sm">
+        <div class="text-sm font-medium text-gray-800">
+          {{ match.home_team }} ({{ match.home_rank || '-' }}) vs {{ match.away_team }} ({{ match.away_rank || '-' }})
+        </div>
+        <div class="text-xs text-gray-500 mt-1">{{ match.league }} — {{ match.time_str }}</div>
+        <div class="text-xs mt-2 text-indigo-600 font-semibold underline">
+
+                    {{ match.prediction }} →
+                    {{
+                    match.prediction === '1' ? 'Home Win' :
+                    match.prediction === 'X' ? 'Draw' :
+                    match.prediction === '2' ? 'Away Win' :
+                    'Unknown'
+                    }}
+
+                    </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div v-else class="text-sm text-gray-500">
+    No matches found for your settings. Try reducing risk or increasing rank range.
+  </div>
+</div>
 
 
 
@@ -390,7 +459,9 @@
                 </a>
                 </div>
             </div>
-</div>
+    </div>
+
+
 
 
             <!-- Loading State -->
@@ -844,6 +915,48 @@ onMounted(() => {
     }).slice(0, 3)
   })
   const todayISODate = new Date().toISOString().split('T')[0]
+  // Combo Builder State
+  // Combo Builder State
+const comboRisk = ref('conservative')
+const comboSize = ref(3)
+const smartCombo = ref([])
+const homeRankLimit = ref(10)
+const awayRankLimit = ref(10)
+
+const generateSmartCombo = () => {
+  const threshold = {
+    conservative: 70,
+    balanced: 60,
+    risky: 50
+  }[comboRisk.value]
+
+  const eligible = filteredMatches.value.filter(match => {
+    const prob = getHighestProbability(match)
+    const homeValid = !match.home_rank || match.home_rank <= homeRankLimit.value
+    const awayValid = !match.away_rank || match.away_rank <= awayRankLimit.value
+    return prob >= threshold && homeValid && awayValid
+  })
+
+  const sorted = eligible.sort((a, b) => getHighestProbability(b) - getHighestProbability(a))
+  smartCombo.value = sorted.slice(0, comboSize.value)
+}
+
+
+
+
+// Combo stats
+const comboConfidence = computed(() => {
+  if (!smartCombo.value.length) return 0
+  const probs = smartCombo.value.map(m => getHighestProbability(m) / 100)
+  return Math.round(probs.reduce((acc, p) => acc * p, 1) * 100)
+})
+
+const estimatedComboReturn = computed(() => {
+  if (!smartCombo.value.length) return 0
+  const odds = smartCombo.value.map(m => 100 / getHighestProbability(m))
+  return odds.reduce((acc, o) => acc * o, 1).toFixed(2)
+})
+
 
 const top5Today = computed(() => {
   return bestBets.value
