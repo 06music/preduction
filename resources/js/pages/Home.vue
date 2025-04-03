@@ -16,14 +16,24 @@
       </div>
 
       <div class="transition-transform duration-300 group-hover:scale-105">
-        <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-400 tracking-tight">
-          ⚽ DimaRaba7
-        </h1>
-        <p class="text-sm text-gray-600 font-medium">
-          <span class="bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent">Tunisian Football Intelligence</span>
-          • Predictions • Analytics
-        </p>
-      </div>
+  <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-400 tracking-tight">
+    ⚽ DimaRaba7
+  </h1>
+  <p class="text-sm text-gray-600 font-medium">
+    <span class="bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent">Tunisian Football Intelligence</span>
+    • Predictions • Analytics
+  </p>
+
+  <!-- 👇 Online user count -->
+  <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4S8 5.79 8 8s1.79 4 4 4zM12 14c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z"/>
+    </svg>
+    {{ onlineUsers }} visitors online
+  </p>
+
+</div>
+
     </div>
 
     <!-- Buttons -->
@@ -798,6 +808,17 @@ const loadMore = () => {
 
     return result
   })
+  const onlineUsers = ref(0)
+
+onMounted(() => {
+  // Simulate random active users
+  onlineUsers.value = Math.floor(20 + Math.random() * 100)
+
+  // Optional: update every 30 seconds
+  setInterval(() => {
+    onlineUsers.value = Math.floor(20 + Math.random() * 100)
+  }, 30000)
+})
 
   // Computed: Best Bets
   const bestBets = computed(() => {
