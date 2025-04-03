@@ -282,7 +282,16 @@
     <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
       {{ bestBets.length }} top confidence picks
     </span>
+
   </div>
+  <!-- Example Ad Slot -->
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-client="ca-pub-7746915909228308"
+     data-ad-slot="5891059453"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+
 
   <!-- Match Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -909,6 +918,28 @@ const top5Today = computed(() => {
   // Load on mount
   onMounted(() => {
     fetchData()
+    // Simulate online user count
+  onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  setInterval(() => {
+    onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  }, 30000);
+
+  // Inject Google AdSense script
+  const adScript = document.createElement('script');
+  adScript.setAttribute('async', '');
+  adScript.setAttribute('src', 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7746915909228308');
+  adScript.setAttribute('crossorigin', 'anonymous');
+  document.head.appendChild(adScript);
+
+  // Optional: initialize ads after script loads
+  setTimeout(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.warn('AdSense init error:', e);
+    }
+  }, 500);
+
   })
   </script>
 
