@@ -2,274 +2,377 @@
     <div class="min-h-screen bg-gray-50 p-4 md:p-6">
       <div class="">
         <!-- Header Section -->
-        <header class="mb-8">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">
-                ⚽ Forebet Pro+
-              </h1>
-              <p class="text-gray-500 mt-1">AI-powered football predictions & analytics</p>
-            </div>
-            <div class="flex gap-3">
-              <button
-                @click="fetchData"
-                class="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-xs hover:shadow-sm transition-all border border-gray-200 hover:border-blue-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Refresh
-              </button>
-              <button
-                @click="showFilters = !showFilters"
-                class="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-xs hover:shadow-sm transition-all border border-gray-200 hover:border-blue-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                {{ showFilters ? 'Hide' : 'Show' }} Filters
-              </button>
-            </div>
-          </div>
-        </header>
+   <!-- Animated Header Section -->
+<header class="mb-8 animate-fade-in-up">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <!-- Logo + Title -->
+    <div class="flex items-center gap-4">
+      <!-- Tunisia Flag Logo -->
+      <div class="relative group transition-all duration-300">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg"
+             alt="Tunisia Logo"
+             class="w-12 h-12 rounded-lg shadow-lg border-2 border-white transform group-hover:rotate-6 transition-transform duration-300" />
+        <div class="absolute -inset-2 rounded-lg bg-gradient-to-tr from-red-500/20 to-red-900/10 -z-10"></div>
+      </div>
+
+      <div class="transition-transform duration-300 group-hover:scale-105">
+        <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-400 tracking-tight">
+          ⚽ DimaRaba7
+        </h1>
+        <p class="text-sm text-gray-600 font-medium">
+          <span class="bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent">Tunisian Football Intelligence</span>
+          • Predictions • Analytics
+        </p>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-3">
+      <button
+        @click="fetchData"
+        class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-red-200 group"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5 text-red-500 group-hover:rotate-180 transition-transform duration-300"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span class="font-medium text-gray-700">Refresh</span>
+      </button>
+
+      <button
+        @click="showFilters = !showFilters"
+        class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-red-200 group"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5 text-red-500 group-hover:scale-110 transition-transform duration-300"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        <span class="font-medium text-gray-700">{{ showFilters ? 'Hide' : 'Show' }} Filters</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <!-- Left Sidebar - Stats & Filters -->
           <div class="lg:col-span-1 space-y-6">
             <!-- Filters Card -->
-            <div v-if="showFilters" class="bg-white p-5 rounded-xl shadow-xs border border-gray-200">
-              <h3 class="font-medium text-gray-800 mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                Filter Matches
-              </h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                  <input
-                    type="date"
-                    v-model="dateFilter"
-                    class="w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                  >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Time of Day</label>
-                  <select v-model="timeFilter" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                    <option value="">All Day</option>
-                    <option value="morning">Morning (00:00-11:59)</option>
-                    <option value="afternoon">Afternoon (12:00-17:59)</option>
-                    <option value="evening">Evening (18:00-23:59)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Min Confidence</label>
-                  <select v-model="minProbability" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                    <option value="0">Any %</option>
-                    <option value="50">50%+</option>
-                    <option value="60">60%+</option>
-                    <option value="70">70%+</option>
-                    <option value="80">80%+</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">League</label>
-                  <select v-model="leagueFilter" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                    <option value="">All Leagues</option>
-                    <option v-for="league in availableLeagues" :value="league">{{ league }}</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Team Quality</label>
-                  <select v-model="topTeamsFilter" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                    <option value="false">All Teams</option>
-                    <option value="true">Top 3 Ranked Only</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mt-6 flex justify-end gap-3">
-                <button
-                  @click="resetFilters"
-                  class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Reset
-                </button>
-                <button
-                  @click="applyFilters"
-                  class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
+       <!-- Filters Card -->
+<div v-if="showFilters" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+  <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2 text-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+    </svg>
+    Filter Matches
+  </h3>
+  <div class="space-y-4">
+    <!-- Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+      <input
+        type="date"
+        v-model="dateFilter"
+        class="w-full rounded-lg border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"
+      >
+    </div>
+
+    <!-- Min Confidence -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Min Confidence</label>
+      <select v-model="minProbability" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
+        <option value="0">Any %</option>
+        <option value="50">50%+</option>
+        <option value="60">60%+</option>
+        <option value="70">70%+</option>
+        <option value="80">80%+</option>
+      </select>
+    </div>
+
+    <!-- Top Teams Only -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Team Quality</label>
+      <select v-model="topTeamsFilter" class="w-full rounded-lg border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
+        <option value="false">All Teams</option>
+        <option value="true">Top 3 Ranked Only</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-6 flex justify-end gap-3">
+    <button
+      @click="resetFilters"
+      class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+    >
+      Reset
+    </button>
+    <button
+      @click="applyFilters"
+      class="px-4 py-2 bg-red-600 rounded-lg text-sm font-medium text-white hover:bg-red-700"
+    >
+      Apply
+    </button>
+  </div>
+</div>
+
 
             <!-- Stats Card -->
-            <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-200">
-              <h3 class="font-medium text-gray-800 mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                Today's Stats
-              </h3>
-              <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600">Total Matches</span>
-                  <span class="font-medium">{{ filteredMatches.length }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600">High Confidence</span>
-                  <span class="font-medium">{{ highConfidenceMatchesCount }} ({{ highConfidencePercentage }}%)</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600">Top Team Matches</span>
-                  <span class="font-medium">{{ topTeamMatchesCount }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-gray-600">Avg. Confidence</span>
-                  <span class="font-medium">{{ averageConfidence }}%</span>
-                </div>
-              </div>
-            </div>
+          <!-- Stats Card -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+  <h3 class="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>
+    Today’s Stats
+  </h3>
+  <div class="space-y-4 text-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Total Matches
+      </div>
+      <span class="font-medium text-gray-900">{{ filteredMatches.length }}</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        High Confidence
+      </div>
+      <span class="font-medium text-gray-900">{{ highConfidenceMatchesCount }} ({{ highConfidencePercentage }}%)</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l4-4 4 4m0-8l-4 4-4-4" />
+        </svg>
+        Top Team Matches
+      </div>
+      <span class="font-medium text-gray-900">{{ topTeamMatchesCount }}</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V7a4 4 0 118 0v4m-4 4h-1a4 4 0 100 8h1a4 4 0 100-8z" />
+        </svg>
+        Avg. Confidence
+      </div>
+      <span class="font-medium text-gray-900">{{ averageConfidence }}%</span>
+    </div>
+  </div>
+</div>
+
 
             <!-- Leagues Card -->
-            <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-200">
-              <h3 class="font-medium text-gray-800 mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Top Leagues
-              </h3>
-              <div class="space-y-3">
-                <div
-                  v-for="league in topLeagues"
-                  :key="league.name"
-                  class="flex items-center justify-between cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
-                  @click="leagueFilter = league.name; applyFilters()"
-                >
-                  <span class="text-sm font-medium">{{ league.name }}</span>
-                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{{ league.count }} matches</span>
-                </div>
-              </div>
-            </div>
+         <!-- Must-Watch Matches -->
+<!-- Must-Watch Matches -->
+<div v-if="mustWatchMatches.length" class="bg-white border border-gray-100 rounded-2xl shadow-sm mt-6 overflow-hidden">
+  <!-- Header -->
+  <div class="bg-yellow-50 border-b border-yellow-100 px-6 py-4">
+    <h2 class="text-lg font-bold text-yellow-800 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m0-4h.01M12 20h.01M9 12h.01M15 12h.01M12 8v.01" />
+      </svg>
+      Must-Watch Matches Today
+    </h2>
+  </div>
+
+  <!-- Match List -->
+  <div class="divide-y divide-gray-100">
+    <div
+      v-for="match in (showAllMustWatch ? mustWatchMatches : mustWatchMatches.slice(0, 4))"
+      :key="match.id"
+      class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center px-6 py-3 hover:bg-gray-50 transition"
+    >
+      <!-- Time -->
+      <div class="col-span-2 text-sm text-gray-500 font-medium">
+        {{ match.time_str }}
+      </div>
+
+      <!-- Teams -->
+      <div class="col-span-6 flex flex-col sm:flex-row sm:items-center sm:gap-2 text-sm text-gray-800 font-semibold">
+        <span>{{ match.home_team }} <span v-if="match.home_rank" class="text-gray-400 text-xs font-normal">(#{{ match.home_rank }})</span></span>
+        <span class="text-gray-500 font-normal hidden sm:inline">vs</span>
+        <span>{{ match.away_team }} <span v-if="match.away_rank" class="text-gray-400 text-xs font-normal">(#{{ match.away_rank }})</span></span>
+      </div>
+
+      <!-- Prediction -->
+      <div class="col-span-2 text-sm text-gray-700 font-medium">
+        {{ match.prediction }} →
+        {{
+          match.prediction === '1' ? 'Home Win' :
+          match.prediction === 'X' ? 'Draw' :
+          match.prediction === '2' ? 'Away Win' :
+          'Unknown'
+        }}
+      </div>
+
+      <!-- Hot Pick + View -->
+      <div class="col-span-2 flex items-center justify-between sm:justify-end gap-2">
+        <span
+          v-if="getHighestProbability(match) > 60"
+          class="text-xs bg-yellow-100 text-yellow-800 font-semibold px-2 py-0.5 rounded-full"
+        >
+          🔥 Hot Pick
+        </span>
+        <a
+          :href="match.match_url"
+          target="_blank"
+          class="text-sm text-blue-600 hover:underline"
+        >
+          View →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- See More Button -->
+  <div class="text-center py-4 border-t border-gray-100">
+    <button
+      @click="showAllMustWatch = !showAllMustWatch"
+      class="text-sm font-medium text-yellow-700 hover:underline"
+    >
+      {{ showAllMustWatch ? 'Show Less ▲' : 'See More ▼' }}
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
           </div>
 
           <!-- Main Content Area -->
           <div class="lg:col-span-3 space-y-6">
             <!-- Best Bets Section -->
-            <div v-if="bestBets.length > 0" class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100">
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                  </svg>
-                  Best Bets of the Day
-                </h2>
-                <span class="text-sm bg-white px-3 py-1 rounded-full text-blue-600 font-medium">
-                  {{ bestBets.length }} high confidence picks
-                </span>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div v-if="bestBets.length > 0" class="bg-white/90 backdrop-blur border border-indigo-100 p-6 rounded-2xl shadow-md">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-bold text-indigo-800 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+      </svg>
+      Best Bets of the Day
+    </h2>
+    <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
+      {{ bestBets.length }} top confidence picks
+    </span>
+  </div>
+
+  <!-- Match Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div
-                  v-for="match in bestBets"
-                  :key="'best-'+match.id"
-                  class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border-2 border-green-200"
+                v-for="match in bestBets"
+                :key="match.id"
+                class="bg-gradient-to-tr from-white via-gray-50 to-blue-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:scale-[1.01] transition-all duration-300"
                 >
-                  <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 class="font-bold text-gray-800 line-clamp-1">{{ match.game }}</h3>
-                        <p class="text-xs text-gray-400 mt-1">{{ match.league }}</p>
-                      </div>
-                      <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                        {{ getHighestProbability(match) }}% Confidence
-                      </span>
+                <div class="p-4 space-y-2">
+                    <!-- Match Info -->
+                    <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-800 truncate">{{ match.game }}</h3>
+                        <p class="text-xs text-gray-500">{{ match.league }}</p>
+                    </div>
+                    <span class="text-xs font-bold px-2 py-1 rounded-full"
+                        :class="{
+                        'bg-green-100 text-green-800': getHighestProbability(match) >= 70,
+                        'bg-yellow-100 text-yellow-800': getHighestProbability(match) < 70
+                        }">
+                        {{ getHighestProbability(match) }}%
+                    </span>
                     </div>
 
-                    <div class="flex items-center justify-between my-3">
-                      <div class="text-center">
+                    <!-- Teams -->
+                    <div class="flex justify-between items-center pt-2">
+                    <div class="text-center">
                         <div class="font-bold text-gray-800">{{ match.home_team }}</div>
-                        <div v-if="match.home_rank" class="text-xs mt-1" :class="{
-                          'text-yellow-600 font-bold': isTopRanked(match.home_rank),
-                          'text-gray-400': !isTopRanked(match.home_rank)
-                        }">
-                          Rank {{ match.home_rank }}
-                        </div>
-                      </div>
-
-                      <div class="flex flex-col items-center mx-1">
-                        <div class="text-xs text-gray-500 mb-1">VS</div>
-                        <div class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-bold">
-                          {{ getPredictionType(match) }}
-                        </div>
-                      </div>
-
-                      <div class="text-center">
+                        <div v-if="match.home_rank" class="text-xs text-gray-400 mt-0.5">#{{ match.home_rank }}</div>
+                    </div>
+                    <div class="text-xs text-gray-500 font-medium px-2">VS</div>
+                    <div class="text-center">
                         <div class="font-bold text-gray-800">{{ match.away_team }}</div>
-                        <div v-if="match.away_rank" class="text-xs mt-1" :class="{
-                          'text-yellow-600 font-bold': isTopRanked(match.away_rank),
-                          'text-gray-400': !isTopRanked(match.away_rank)
-                        }">
-                          Rank {{ match.away_rank }}
-                        </div>
-                      </div>
+                        <div v-if="match.away_rank" class="text-xs text-gray-400 mt-0.5">#{{ match.away_rank }}</div>
+                    </div>
                     </div>
 
-                    <div class="mt-3">
-                      <div class="flex justify-between items-center text-xs">
-                        <div class="text-center flex-1">
-                          <div class="font-bold">1</div>
-                          <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_1 > 60, 'bg-green-300': match.prob_1 <= 60}"
-                              :style="{ width: `${match.prob_1}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_1 > 60}">
-                            {{ match.prob_1 }}%
-                          </div>
-                        </div>
-                        <div class="text-center flex-1 px-1">
-                          <div class="font-bold">X</div>
-                          <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_x > 60, 'bg-yellow-300': match.prob_x <= 60}"
-                              :style="{ width: `${match.prob_x}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_x > 60}">
-                            {{ match.prob_x }}%
-                          </div>
-                        </div>
-                        <div class="text-center flex-1">
-                          <div class="font-bold">2</div>
-                          <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_2 > 60, 'bg-red-300': match.prob_2 <= 60}"
-                              :style="{ width: `${match.prob_2}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_2 > 60}">
-                            {{ match.prob_2 }}%
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    <!-- Pick Label -->
+                    <div class="text-xs mt-2 text-indigo-600 font-semibold underline">
 
-                  <a
+                    {{ match.prediction }} →
+                    {{
+                    match.prediction === '1' ? 'Home Win' :
+                    match.prediction === 'X' ? 'Draw' :
+                    match.prediction === '2' ? 'Away Win' :
+                    'Unknown'
+                    }}
+
+                    </div>
+
+                    <!-- Confidence Bars -->
+                    <div class="flex justify-between items-end gap-1 mt-4 text-xs text-center">
+                    <div class="flex-1">
+                        <div class="font-bold">1</div>
+                        <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
+                        <div
+                            class="h-full rounded-full transition-all"
+                            :class="{'bg-green-500': match.prob_1 > 60, 'bg-gray-300': match.prob_1 <= 60}"
+                            :style="{ width: match.prob_1 + '%' }"
+                        ></div>
+                        </div>
+                        <div class="mt-1">{{ match.prob_1 }}%</div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold">X</div>
+                        <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
+                        <div
+                            class="h-full rounded-full transition-all"
+                            :class="{'bg-yellow-400': match.prob_x > 60, 'bg-gray-300': match.prob_x <= 60}"
+                            :style="{ width: match.prob_x + '%' }"
+                        ></div>
+                        </div>
+                        <div class="mt-1">{{ match.prob_x }}%</div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold">2</div>
+                        <div class="h-2 w-full bg-gray-200 rounded-full mt-1 overflow-hidden">
+                        <div
+                            class="h-full rounded-full transition-all"
+                            :class="{'bg-red-500': match.prob_2 > 60, 'bg-gray-300': match.prob_2 <= 60}"
+                            :style="{ width: match.prob_2 + '%' }"
+                        ></div>
+                        </div>
+                        <div class="mt-1">{{ match.prob_2 }}%</div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Action -->
+                <a
                     :href="match.match_url"
                     target="_blank"
-                    class="block text-center bg-green-50 hover:bg-green-100 py-2 text-xs font-medium text-green-700 transition-colors"
-                  >
-                    View detailed analysis →
-                  </a>
+                    class="block text-center bg-blue-50 hover:bg-blue-100 py-2 text-xs font-medium text-blue-700 transition"
+                >
+                    View Analysis →
+                </a>
                 </div>
-              </div>
             </div>
+</div>
+
 
             <!-- Loading State -->
             <div v-if="loading" class="flex justify-center items-center py-20">
@@ -304,141 +407,151 @@
             </div>
 
             <!-- Regular Matches Grid -->
-            <div v-else>
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                <h2 class="text-xl font-bold text-gray-800">
-                  {{ dateFilter ? `Matches on ${formatDate(dateFilter)}` : 'All Upcoming Matches' }}
-                  <span class="text-sm font-normal text-gray-500 ml-2">({{ filteredMatches.length }} matches)</span>
-                </h2>
-                <div class="flex items-center gap-2">
-                  <span class="text-sm text-gray-500">Sort:</span>
-                  <select
-                    v-model="sortOption"
-                    @change="applySorting"
-                    class="rounded-lg border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                  >
-                    <option value="highest-prob">Highest Probability</option>
-                    <option value="time">Match Time</option>
-                    <option value="league">League</option>
-                  </select>
-                </div>
-              </div>
+       <!-- Regular Matches Section -->
+<div class="mt-8">
+  <!-- Toggle View Button -->
+  <div class="flex justify-end mb-4">
+    <button @click="tableView = !tableView"
+      class="text-sm bg-white border border-gray-300 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition flex items-center gap-2">
+      <svg v-if="tableView" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </svg>
+      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M4 6h7v7H4zM13 6h7v7h-7zM4 17h7v1H4zM13 17h7v1h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </svg>
+      {{ tableView ? 'Grid View' : 'Table View' }}
+    </button>
+  </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div
-                  v-for="match in filteredMatches"
-                  :key="match.id"
-                  class="bg-white rounded-xl shadow-xs hover:shadow-sm transition-all duration-300 overflow-hidden border border-gray-200"
-                  :class="{
-                    'border-yellow-300 border-2': isTopRanked(match.home_rank) || isTopRanked(match.away_rank)
-                  }"
-                >
-                  <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 class="font-bold text-gray-800 line-clamp-1">{{ match.game }}</h3>
-                        <p class="text-xs text-gray-400 mt-1">{{ match.league }}</p>
-                      </div>
-                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">{{ match.time_str }}</span>
-                    </div>
-
-                    <div class="flex items-center justify-between my-3">
-                      <div class="text-center">
-                        <div class="font-bold text-gray-800">{{ match.home_team }}</div>
-                        <div v-if="match.home_rank" class="text-xs mt-1" :class="{
-                          'text-yellow-600 font-bold': isTopRanked(match.home_rank),
-                          'text-gray-400': !isTopRanked(match.home_rank)
-                        }">
-                          Rank {{ match.home_rank }}
-                        </div>
-                      </div>
-
-                      <div class="flex flex-col items-center mx-1">
-                        <div class="text-xs text-gray-500 mb-1">VS</div>
-                        <div class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-xs font-bold">
-                          {{ match.prediction }}
-                        </div>
-                      </div>
-
-                      <div class="text-center">
-                        <div class="font-bold text-gray-800">{{ match.away_team }}</div>
-                        <div v-if="match.away_rank" class="text-xs mt-1" :class="{
-                          'text-yellow-600 font-bold': isTopRanked(match.away_rank),
-                          'text-gray-400': !isTopRanked(match.away_rank)
-                        }">
-                          Rank {{ match.away_rank }}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="bg-gray-50 rounded-lg p-3 mt-3">
-                      <div class="flex justify-between items-center text-xs">
-                        <div class="text-center">
-                          <div class="font-bold">1</div>
-                          <div class="h-2 w-12 bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_1 > 60, 'bg-green-300': match.prob_1 <= 60}"
-                              :style="{ width: `${match.prob_1}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_1 > 60}">
-                            {{ match.prob_1 }}%
-                          </div>
-                        </div>
-                        <div class="text-center">
-                          <div class="font-bold">X</div>
-                          <div class="h-2 w-12 bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_x > 60, 'bg-yellow-300': match.prob_x <= 60}"
-                              :style="{ width: `${match.prob_x}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_x > 60}">
-                            {{ match.prob_x }}%
-                          </div>
-                        </div>
-                        <div class="text-center">
-                          <div class="font-bold">2</div>
-                          <div class="h-2 w-12 bg-gray-200 rounded-full mt-1 overflow-hidden">
-                            <div
-                              class="h-full"
-                              :class="{'bg-green-500': match.prob_2 > 60, 'bg-red-300': match.prob_2 <= 60}"
-                              :style="{ width: `${match.prob_2}%` }"
-                            ></div>
-                          </div>
-                          <div class="mt-1 text-xs" :class="{'text-green-600 font-bold': match.prob_2 > 60}">
-                            {{ match.prob_2 }}%
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div v-if="match.score || match.half_time_score" class="mt-3 flex justify-center gap-3">
-                      <div v-if="match.score" class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
-                        FT: {{ match.score }}
-                      </div>
-                      <div v-if="match.half_time_score" class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-full">
-                        HT: {{ match.half_time_score }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <a
-                    :href="match.match_url"
-                    target="_blank"
-                    class="block text-center bg-gray-50 hover:bg-gray-100 py-2 text-xs font-medium text-blue-600 transition-colors"
-                  >
-                    View match details →
-                  </a>
-                </div>
-              </div>
+  <!-- Table View -->
+  <div v-if="tableView" class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 text-sm rounded-xl overflow-hidden shadow-sm">
+      <thead class="bg-gray-50 text-gray-700 font-semibold">
+        <tr>
+          <th class="px-4 py-3 text-left">Time</th>
+          <th class="px-4 py-3 text-left">Game</th>
+          <th class="px-4 py-3 text-left">Pick</th>
+          <th class="px-4 py-3 text-center">1</th>
+          <th class="px-4 py-3 text-center">X</th>
+          <th class="px-4 py-3 text-center">2</th>
+          <th class="px-4 py-3 text-center">Rank</th>
+          <th class="px-4 py-3 text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 text-gray-700">
+        <tr v-for="match in paginatedMatchess" :key="match.id" class="hover:bg-gray-50 transition">
+          <td class="px-4 py-2">{{ match.time_str }}</td>
+          <td class="px-4 py-2">
+            <div class="font-medium text-gray-800">{{ match.home_team }} vs {{ match.away_team }}</div>
+            <div class="text-xs text-gray-400">{{ match.league }}</div>
+          </td>
+          <td class="px-4 py-2">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full"
+              :class="{
+                'bg-green-100 text-green-800': match.prediction === '1',
+                'bg-yellow-100 text-yellow-800': match.prediction === 'X',
+                'bg-red-100 text-red-800': match.prediction === '2'
+              }">
+              {{ match.prediction }} - {{ getPredictionType(match) }}
+            </span>
+          </td>
+          <td class="px-2 py-2 text-center text-xs">{{ match.prob_1 }}%</td>
+          <td class="px-2 py-2 text-center text-xs">{{ match.prob_x }}%</td>
+          <td class="px-2 py-2 text-center text-xs">{{ match.prob_2 }}%</td>
+          <td class="px-4 py-2 text-center text-xs">
+            <div v-if="match.home_rank || match.away_rank" class="flex flex-col">
+              <span class="text-gray-600">🏠 {{ match.home_rank || '-' }}</span>
+              <span class="text-gray-600">🛫 {{ match.away_rank || '-' }}</span>
             </div>
+          </td>
+          <td class="px-4 py-2 text-right">
+            <a :href="match.match_url" target="_blank" class="text-blue-600 hover:underline text-xs">Details →</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- See More (optional for pagination) -->
+    <div v-if="hasMorePagess" class="p-4 text-center">
+      <button @click="loadMores"
+        class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">See More</button>
+    </div>
+  </div>
+
+  <!-- Grid View -->
+  <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div
+      v-for="match in paginatedMatchess"
+      :key="match.id"
+      class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden border border-gray-200"
+    >
+      <div class="p-4">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <h3 class="font-bold text-gray-800">{{ match.home_team }} vs {{ match.away_team }}</h3>
+            <p class="text-xs text-gray-400 mt-1">{{ match.league }} — {{ match.time_str }}</p>
+          </div>
+          <span
+            class="text-xs font-bold px-2 py-1 rounded-full"
+            :class="{
+              'bg-green-100 text-green-800': match.prediction === '1',
+              'bg-yellow-100 text-yellow-800': match.prediction === 'X',
+              'bg-red-100 text-red-800': match.prediction === '2'
+            }">
+            {{ match.prediction }}
+          </span>
+        </div>
+
+        <div class="flex justify-between text-xs mt-3 text-gray-600">
+          <div class="text-center flex-1">
+            <div class="font-semibold">1</div>
+            <div>{{ match.prob_1 }}%</div>
+          </div>
+          <div class="text-center flex-1">
+            <div class="font-semibold">X</div>
+            <div>{{ match.prob_x }}%</div>
+          </div>
+          <div class="text-center flex-1">
+            <div class="font-semibold">2</div>
+            <div>{{ match.prob_2 }}%</div>
+          </div>
+        </div>
+
+        <div class="text-xs text-gray-500 mt-3">
+          <strong>Prediction:</strong> {{ getPredictionType(match) }}
+        </div>
+
+        <div class="mt-2 flex justify-between text-xs text-gray-500">
+          <span>🏠 Rank {{ match.home_rank || '-' }}</span>
+          <span>🛫 Rank {{ match.away_rank || '-' }}</span>
+        </div>
+      </div>
+
+      <a :href="match.match_url" target="_blank"
+        class="text-xs text-blue-600 hover:underline text-center block bg-gray-50 py-2">View details →</a>
+    </div>
+
+    <!-- See More (Grid version) -->
+    <div v-if="hasMorePagess" class="col-span-full p-4 text-center">
+      <button @click="loadMores"
+        class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">See More Matches ↓</button>
+    </div>
+  </div>
+</div>
+
+
           </div>
         </div>
       </div>
     </div>
+    <!-- Floating Footer -->
+<footer class="fixed bottom-4 right-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-md px-4 py-1.5 text-sm text-gray-600 font-medium flex items-center gap-2 animate-fade-in">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm0-1.5c-4.69 0-8.5-3.81-8.5-8.5S7.31 3.5 12 3.5 20.5 7.31 20.5 12 16.69 20.5 12 20.5z"/>
+    <path d="M10.25 15h1.5V9h-1.5v6zm0 2h1.5v-1.5h-1.5V17z"/>
+  </svg>
+  Mahmoud Bouhlel © {{ new Date().getFullYear() }}
+</footer>
+
   </template>
 
   <script setup>
@@ -450,6 +563,24 @@
   const loading = ref(true)
   const error = ref(null)
   const showFilters = ref(false)
+  const showAllMustWatch = ref(false)
+  const tableView = ref(false)
+    const currentPage = ref(1)
+    const rowsPerPage = 50
+const page = ref(1)
+const perPage = 50
+
+const paginatedMatchess = computed(() => {
+  return filteredMatches.value.slice(0, page.value * perPage)
+})
+
+const hasMorePagess = computed(() => {
+  return filteredMatches.value.length > paginatedMatchess.value.length
+})
+
+const loadMores = () => {
+  page.value++
+}
 
   // Filters
   const dateFilter = ref('')
@@ -545,31 +676,33 @@
     }
   ]
 
-  // Computed: Leagues
-  const availableLeagues = computed(() => {
-    const leagues = new Set()
-    matches.value.forEach(match => {
-      if (match.league) leagues.add(match.league)
+  const mustWatchMatches = computed(() =>
+  filteredMatches.value
+    .filter(m => {
+      const home = Number(m.home_rank)
+      const away = Number(m.away_rank)
+      const top4 = [1, 2, 3, 4]
+      return (top4.includes(home) && away >= 10) || (top4.includes(away) && home >= 10)
     })
-    return Array.from(leagues).sort()
-  })
+    .sort((a, b) => getHighestProbability(b) - getHighestProbability(a))
+    .slice(0, 10)
+)
 
-  // Computed: Top Leagues (for sidebar)
-  const topLeagues = computed(() => {
-    const leagueCounts = {}
 
-    matches.value.forEach(match => {
-      if (!leagueCounts[match.league]) {
-        leagueCounts[match.league] = 0
-      }
-      leagueCounts[match.league]++
-    })
+const paginatedMatches = computed(() => {
+  const start = (currentPage.value - 1) * rowsPerPage
+  const end = start + rowsPerPage
+  return filteredMatches.value.slice(start, end)
+})
 
-    return Object.entries(leagueCounts)
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5)
-  })
+const hasMorePages = computed(() => {
+  return filteredMatches.value.length > currentPage.value * rowsPerPage
+})
+
+const loadMore = () => {
+  currentPage.value++
+}
+
 
   // Computed: Stats
   const highConfidenceMatchesCount = computed(() => {
@@ -680,6 +813,13 @@
       return bMax - aMax
     }).slice(0, 3)
   })
+  const todayISODate = new Date().toISOString().split('T')[0]
+
+const top5Today = computed(() => {
+  return bestBets.value
+    .filter(match => match.iso_time.startsWith(todayISODate)) // only today's matches
+    .slice(0, 5)
+})
 
   // Utils
   const isTopRanked = (rank) => {
@@ -796,4 +936,32 @@
       grid-column: span 1;
     }
   }
+  @keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out both;
+}
+
   </style>
