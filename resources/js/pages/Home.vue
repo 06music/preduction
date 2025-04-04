@@ -745,7 +745,7 @@
                                                 'bg-yellow-100 text-yellow-800': match.prediction === 'X',
                                                 'bg-red-100 text-red-800': match.prediction === '2'
                                             }">
-                                                {{ match.prediction }} - {{ getPredictionType(match) }}
+                                                {{ match.prediction }}
                                             </span>
                                         </td>
 
@@ -833,9 +833,7 @@
         </div>
 
         <!-- Prediction Type -->
-        <div class="text-sm text-gray-500 mt-3">
-          <strong>Prediction:</strong> {{ getPredictionType(match) }}
-        </div>
+
 
         <!-- Ranks -->
         <div class="mt-3 flex justify-between text-sm text-gray-500">
