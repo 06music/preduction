@@ -29,15 +29,17 @@
                                 • Predictions • Analytics
                             </p>
 
-                            <!-- ?? Online user count -->
+                            <!-- Online User Count Section -->
                             <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                <!-- User Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-500"
                                     viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4S8 5.79 8 8s1.79 4 4 4zM12 14c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4S8 5.79 8 8s1.79 4 4 4zM12 14c-4.42
+                 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
                                 </svg>
                                 {{ onlineUsers }} visitors online
                             </p>
+
 
                         </div>
 
@@ -130,7 +132,7 @@
                             </div> -->
 
 
-                           <!--  <div>
+                            <!--  <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Min Confidence</label>
                                 <input type="range" min="0" max="100" step="10" v-model="minProbability"
                                     class="w-full accent-red-500">
@@ -170,66 +172,74 @@
                         </div>
                     </div>
 
-<!-- Modern Stats Card -->
-<div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 animate-fade-in-up">
-  <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24"
-      stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    </svg>
-    Today’s Stats
-  </h3>
+                    <!-- Modern Stats Card -->
+                    <div
+                        class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 animate-fade-in-up">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            Today’s Stats
+                        </h3>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-    <!-- Total Matches -->
-    <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
-      <div class="flex items-center gap-2 text-gray-700 font-medium">
-        <svg class="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        Total Matches
-      </div>
-      <span class="text-gray-800 font-semibold">{{ filteredMatches.length }}</span>
-    </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            <!-- Total Matches -->
+                            <div
+                                class="flex items-center justify-between px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
+                                <div class="flex items-center gap-2 text-gray-700 font-medium">
+                                    <svg class="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Total Matches
+                                </div>
+                                <span class="text-gray-800 font-semibold">{{ filteredMatches.length }}</span>
+                            </div>
 
-    <!-- High Confidence -->
-    <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-green-50 hover:bg-green-100 transition">
-      <div class="flex items-center gap-2 text-green-700 font-medium">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        High Confidence
-      </div>
-      <span class="text-green-800 font-semibold">{{ highConfidenceMatchesCount }} ({{ highConfidencePercentage }}%)</span>
-    </div>
+                            <!-- High Confidence -->
+                            <div
+                                class="flex items-center justify-between px-3 py-2 rounded-lg bg-green-50 hover:bg-green-100 transition">
+                                <div class="flex items-center gap-2 text-green-700 font-medium">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    High Confidence
+                                </div>
+                                <span class="text-green-800 font-semibold">{{ highConfidenceMatchesCount }} ({{
+                                    highConfidencePercentage }}%)</span>
+                            </div>
 
-    <!-- Top Team Matches -->
-    <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-yellow-50 hover:bg-yellow-100 transition">
-      <div class="flex items-center gap-2 text-yellow-700 font-medium">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 17l4-4 4 4m0-8l-4 4-4-4" />
-        </svg>
-        Top Team Matches
-      </div>
-      <span class="text-yellow-800 font-semibold">{{ topTeamMatchesCount }}</span>
-    </div>
+                            <!-- Top Team Matches -->
+                            <div
+                                class="flex items-center justify-between px-3 py-2 rounded-lg bg-yellow-50 hover:bg-yellow-100 transition">
+                                <div class="flex items-center gap-2 text-yellow-700 font-medium">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 17l4-4 4 4m0-8l-4 4-4-4" />
+                                    </svg>
+                                    Top Team Matches
+                                </div>
+                                <span class="text-yellow-800 font-semibold">{{ topTeamMatchesCount }}</span>
+                            </div>
 
-    <!-- Avg Confidence -->
-    <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition">
-      <div class="flex items-center gap-2 text-indigo-700 font-medium">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M11 11V7a4 4 0 118 0v4m-4 4h-1a4 4 0 100 8h1a4 4 0 100-8z" />
-        </svg>
-        Avg. Confidence
-      </div>
-      <span class="text-indigo-800 font-semibold">{{ averageConfidence }}%</span>
-    </div>
-  </div>
-</div>
+                            <!-- Avg Confidence -->
+                            <div
+                                class="flex items-center justify-between px-3 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition">
+                                <div class="flex items-center gap-2 text-indigo-700 font-medium">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 11V7a4 4 0 118 0v4m-4 4h-1a4 4 0 100 8h1a4 4 0 100-8z" />
+                                    </svg>
+                                    Avg. Confidence
+                                </div>
+                                <span class="text-indigo-800 font-semibold">{{ averageConfidence }}%</span>
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -272,12 +282,12 @@
 
                                 <!-- Prediction -->
                                 <div class="col-span-2 text-sm text-gray-700 font-medium">
-                                    {{ match.prediction }} ?
+                                    🧠
                                     {{
                                         match.prediction === '1' ? 'Home Win' :
                                             match.prediction === 'X' ? 'Draw' :
                                                 match.prediction === '2' ? 'Away Win' :
-                                                    'Unknown'
+                                    'Unknown'
                                     }}
                                 </div>
 
@@ -285,11 +295,11 @@
                                 <div class="col-span-2 flex items-center justify-between sm:justify-end gap-2">
                                     <span v-if="getHighestProbability(match) > 60"
                                         class="text-xs bg-yellow-100 text-yellow-800 font-semibold px-2 py-0.5 rounded-full">
-                                        ?? Hot Pick
+                                        🔥 Hot Pick
                                     </span>
                                     <a :href="match.match_url" target="_blank"
                                         class="text-sm text-blue-600 hover:underline">
-                                        View ?
+                                        👀 View
                                     </a>
                                 </div>
                             </div>
@@ -299,15 +309,17 @@
                         <div class="text-center py-4 border-t border-gray-100">
                             <button @click="showAllMustWatch = !showAllMustWatch"
                                 class="text-sm font-medium text-yellow-700 hover:underline">
-                                {{ showAllMustWatch ? 'Show Less ?' : 'See More ?' }}
+                                {{ showAllMustWatch ? '🔽 Show Less' : '🔼 See More' }}
                             </button>
                         </div>
                     </div>
 
 
+
                     <!-- Smart Combo Builder -->
                     <div class="bg-white border border-indigo-100 p-6 rounded-2xl shadow-md space-y-6">
-                        <h2 class="text-lg font-bold text-indigo-800 flex items-center gap-2">?? Smart Combo Builder
+                        <h2 class="text-lg font-bold text-indigo-800 flex items-center gap-2">
+                            🧩 Smart Combo Builder
                         </h2>
 
                         <!-- Controls -->
@@ -330,8 +342,8 @@
                             </div>
                             <div class="flex items-end">
                                 <button @click="generateSmartCombo"
-                                    class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm">
-                                    ?? Generate Combo
+                                    class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm flex items-center justify-center gap-2">
+                                    ⚙️ Generate Combo
                                 </button>
                             </div>
                         </div>
@@ -353,7 +365,9 @@
                         <!-- Result -->
                         <div v-if="smartCombo.length"
                             class="bg-indigo-50 p-5 border border-indigo-200 rounded-xl space-y-4">
-                            <h3 class="font-semibold text-indigo-800">Your Combo Picks ({{ smartCombo.length }})</h3>
+                            <h3 class="font-semibold text-indigo-800 flex items-center gap-2">
+                                🎯 Your Combo Picks ({{ smartCombo.length }})
+                            </h3>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div v-for="match in smartCombo" :key="match.id"
@@ -362,29 +376,27 @@
                                         {{ match.home_team }} ({{ match.home_rank || '-' }}) vs {{ match.away_team }}
                                         ({{ match.away_rank || '-' }})
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">{{ match.league }} — {{ match.time_str }}
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        {{ match.league }} — {{ match.time_str }}
                                     </div>
-                                    <div class="text-xs mt-2 text-indigo-600 font-semibold underline">
-
-                                        {{ match.prediction }} ?
+                                    <div class="text-xs mt-2 text-indigo-600 font-semibold flex items-center gap-1">
+                                        🧠
                                         {{
                                             match.prediction === '1' ? 'Home Win' :
                                                 match.prediction === 'X' ? 'Draw' :
                                                     match.prediction === '2' ? 'Away Win' :
-                                                        'Unknown'
+                                        'Unknown'
                                         }}
-
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div v-else class="text-sm text-gray-500">
-                            No matches found for your settings. Try reducing risk or increasing rank range.
+                            😕 No matches found for your settings. Try reducing risk or increasing rank range.
                         </div>
                     </div>
+
 
 
 
@@ -467,22 +479,20 @@
                                     <!-- Prediction Label with Live Odds -->
                                     <div class="text-xs mt-2 text-indigo-600 font-semibold flex items-center gap-2">
                                         <span class="underline">
-                                            {{ match.prediction }} ?
-                                            {{
+                                            🔮 {{
                                                 match.prediction === '1' ? 'Home Win' :
                                                     match.prediction === 'X' ? 'Draw' :
                                                         match.prediction === '2' ? 'Away Win' :
-                                                            'Unknown'
+                                            'Unknown'
                                             }}
                                         </span>
 
                                         <!-- Live Odds badge -->
                                         <span v-if="match.live_odds"
                                             class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-[10px] font-medium shadow-sm">
-                                            ?? {{ match.live_odds }}
+                                            💸 {{ match.live_odds }}
                                         </span>
                                     </div>
-
 
                                     <!-- Confidence Bars -->
                                     <div class="flex justify-between items-end gap-1 mt-4 text-xs text-center">
@@ -517,9 +527,8 @@
 
                                     <!-- Modern Stats Section -->
                                     <div class="grid grid-cols-2 gap-4 text-xs mt-4">
-                                        <!-- Home Team Stats -->
+                                        <!-- Home Stats -->
                                         <div class="bg-blue-50 border border-blue-100 rounded-2xl p-3 shadow-md">
-                                            <!-- Header -->
                                             <div class="flex justify-between items-center mb-2">
                                                 <div class="font-semibold text-blue-800">
                                                     {{ match.home_team }}
@@ -529,8 +538,6 @@
                                                     #{{ match.home_rank }}
                                                 </span>
                                             </div>
-
-                                            <!-- Stats -->
                                             <div class="space-y-2 text-[11px] text-gray-700">
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">PTS</span>
@@ -544,7 +551,7 @@
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">GF / GA</span>
                                                     <span class="font-medium">{{ match.home_gf }}/{{ match.home_ga
-                                                    }}</span>
+                                                        }}</span>
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">GD</span>
@@ -553,9 +560,8 @@
                                             </div>
                                         </div>
 
-                                        <!-- Away Team Stats -->
+                                        <!-- Away Stats -->
                                         <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-3 shadow-md">
-                                            <!-- Header -->
                                             <div class="flex justify-between items-center mb-2">
                                                 <div class="font-semibold text-indigo-800">
                                                     {{ match.away_team }}
@@ -565,8 +571,6 @@
                                                     #{{ match.away_rank }}
                                                 </span>
                                             </div>
-
-                                            <!-- Stats -->
                                             <div class="space-y-2 text-[11px] text-gray-700">
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">PTS</span>
@@ -580,7 +584,7 @@
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">GF / GA</span>
                                                     <span class="font-medium">{{ match.away_gf }}/{{ match.away_ga
-                                                    }}</span>
+                                                        }}</span>
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-gray-500">GD</span>
@@ -589,14 +593,12 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <!-- Action -->
                                 <a :href="match.match_url" target="_blank"
                                     class="block text-center bg-blue-50 hover:bg-blue-100 py-2 text-xs font-medium text-blue-700 transition">
-                                    View Analysis ?
+                                    📊 View Analysis
                                 </a>
                             </div>
                         </div>
@@ -700,33 +702,37 @@
                                                 class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] text-gray-700 mt-2">
                                                 <!-- Home Team Stats -->
                                                 <div class="bg-green-50 p-2 rounded-md">
-                                                    <strong class="block text-green-700 text-[12px] mb-1">?? Home
+                                                    <strong class="block text-green-700 text-[12px] mb-1">🏠 Home
                                                         Stats</strong>
+
                                                     <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                        <span>?? GP: {{ match.home_gp }}</span>
-                                                        <span>? W: {{ match.home_w }}</span>
-                                                        <span>?? D: {{ match.home_d }}</span>
-                                                        <span>? L: {{ match.home_l }}</span>
-                                                        <span>? GF: {{ match.home_gf }}</span>
-                                                        <span>??? GA: {{ match.home_ga }}</span>
-                                                        <span>?? GD: {{ match.home_gd }}</span>
-                                                        <span>?? Pts: {{ match.home_pts }}</span>
+                                                        <span>🎯 GP: {{ match.home_gp }}</span>
+                                                        <span>✅ W: {{ match.home_w }}</span>
+                                                        <span>➖ D: {{ match.home_d }}</span>
+                                                        <span>❌ L: {{ match.home_l }}</span>
+                                                        <span>⚽ GF: {{ match.home_gf }}</span>
+                                                        <span>🛡️ GA: {{ match.home_ga }}</span>
+                                                        <span>📊 GD: {{ match.home_gd }}</span>
+                                                        <span>🏆 Pts: {{ match.home_pts }}</span>
+
                                                     </div>
                                                 </div>
 
                                                 <!-- Away Team Stats -->
                                                 <div class="bg-blue-50 p-2 rounded-md">
-                                                    <strong class="block text-blue-700 text-[12px] mb-1">?? Away
+                                                    <strong class="block text-blue-700 text-[12px] mb-1">🚗 Away
                                                         Stats</strong>
+
                                                     <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                        <span>?? GP: {{ match.away_gp }}</span>
-                                                        <span>? W: {{ match.away_w }}</span>
-                                                        <span>?? D: {{ match.away_d }}</span>
-                                                        <span>? L: {{ match.away_l }}</span>
-                                                        <span>? GF: {{ match.away_gf }}</span>
-                                                        <span>??? GA: {{ match.away_ga }}</span>
-                                                        <span>?? GD: {{ match.away_gd }}</span>
-                                                        <span>?? Pts: {{ match.away_pts }}</span>
+                                                        <span>🎯 GP: {{ match.home_gp }}</span>
+                                                        <span>✅ W: {{ match.home_w }}</span>
+                                                        <span>➖ D: {{ match.home_d }}</span>
+                                                        <span>❌ L: {{ match.home_l }}</span>
+                                                        <span>⚽ GF: {{ match.home_gf }}</span>
+                                                        <span>🛡️ GA: {{ match.home_ga }}</span>
+                                                        <span>📊 GD: {{ match.home_gd }}</span>
+                                                        <span>🏆 Pts: {{ match.home_pts }}</span>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -763,8 +769,9 @@
                                         <!-- Rank -->
                                         <td class="px-4 py-2 text-center text-xs whitespace-nowrap">
                                             <div class="flex flex-col items-center text-gray-500">
-                                                <span>?? {{ match.home_rank || '-' }}</span>
-                                                <span>?? {{ match.away_rank || '-' }}</span>
+                                                <span>🏠 {{ match.home_rank || '-' }}</span>
+                                                <span>🚗 {{ match.away_rank || '-' }}</span>
+
                                             </div>
                                         </td>
 
@@ -790,102 +797,97 @@
 
 
                         <!-- Grid View -->
-                        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div v-for="match in paginatedMatchess" :key="match.id"
-                                class="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+  <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-for="match in paginatedMatchess" :key="match.id" class="bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 overflow-hidden">
 
-                                <div class="p-4">
-                                    <!-- Header: Match Teams & Prediction -->
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h3 class="font-bold text-gray-800">{{ match.home_team }} vs {{
-                                                match.away_team }}</h3>
-                                            <p class="text-xs text-gray-400 mt-1">{{ match.time_str }}</p>
-                                        </div>
-                                        <span class="text-xs font-bold px-2 py-1 rounded-full" :class="{
-                                            'bg-green-100 text-green-800': match.prediction === '1',
-                                            'bg-yellow-100 text-yellow-800': match.prediction === 'X',
-                                            'bg-red-100 text-red-800': match.prediction === '2'
-                                        }">
-                                            {{ match.prediction }}
-                                        </span>
-                                    </div>
+      <div class="p-5">
+        <!-- Header: Match Teams & Prediction -->
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="font-bold text-lg text-gray-800">{{ match.home_team }} vs {{ match.away_team }}</h3>
+            <p class="text-sm text-gray-500 mt-1">{{ match.time_str }}</p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full" :class="{
+            'bg-green-100 text-green-800': match.prediction === '1',
+            'bg-yellow-100 text-yellow-800': match.prediction === 'X',
+            'bg-red-100 text-red-800': match.prediction === '2'
+          }">
+            {{ match.prediction }}
+          </span>
+        </div>
 
-                                    <!-- Probabilities -->
-                                    <div class="flex justify-between text-xs text-gray-600 mt-3">
-                                        <div class="text-center flex-1">
-                                            <div class="font-semibold">1</div>
-                                            <div>{{ match.prob_1 }}%</div>
-                                        </div>
-                                        <div class="text-center flex-1">
-                                            <div class="font-semibold">X</div>
-                                            <div>{{ match.prob_x }}%</div>
-                                        </div>
-                                        <div class="text-center flex-1">
-                                            <div class="font-semibold">2</div>
-                                            <div>{{ match.prob_2 }}%</div>
-                                        </div>
-                                    </div>
+        <!-- Probabilities -->
+        <div class="flex justify-between text-sm text-gray-600 mt-4">
+          <div class="text-center flex-1">
+            <div class="font-semibold text-blue-600">1</div>
+            <div>{{ match.prob_1 }}%</div>
+          </div>
+          <div class="text-center flex-1">
+            <div class="font-semibold text-yellow-600">X</div>
+            <div>{{ match.prob_x }}%</div>
+          </div>
+          <div class="text-center flex-1">
+            <div class="font-semibold text-red-600">2</div>
+            <div>{{ match.prob_2 }}%</div>
+          </div>
+        </div>
 
-                                    <!-- Prediction Type -->
-                                    <div class="text-xs text-gray-500 mt-3">
-                                        <strong>Prediction:</strong> {{ getPredictionType(match) }}
-                                    </div>
+        <!-- Prediction Type -->
+        <div class="text-sm text-gray-500 mt-3">
+          <strong>Prediction:</strong> {{ getPredictionType(match) }}
+        </div>
 
-                                    <!-- Ranks -->
-                                    <div class="mt-2 flex justify-between text-xs text-gray-500">
-                                        <span>?? Rank {{ match.home_rank || '-' }}</span>
-                                        <span>?? Rank {{ match.away_rank || '-' }}</span>
-                                    </div>
+        <!-- Ranks -->
+        <div class="mt-3 flex justify-between text-sm text-gray-500">
+          <span>🏠 {{ match.home_rank || '-' }}</span>
+          <span>🚗 {{ match.away_rank || '-' }}</span>
+        </div>
 
-                                    <!-- Live Odds -->
-                                    <div class="mt-2" v-if="match.live_odds">
-                                        <span
-                                            class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
-                                            ?? Odds: {{ match.live_odds }}
-                                        </span>
-                                    </div>
-                                    <!-- Extra Tags (GG, Over 2.5, Safe Pick, etc) -->
-                                    <div class="mt-3 flex flex-wrap gap-2" v-if="getMatchTags(match).length">
-                                        <span v-for="tag in getMatchTags(match)" :key="tag"
-                                            class="text-[11px] px-2 py-0.5 rounded-full font-medium bg-yellow-100 text-yellow-800">
-                                            {{ tag }}
-                                        </span>
-                                    </div>
+        <!-- Live Odds -->
+        <span v-if="match.live_odds" class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-medium mt-2">
+          💸 {{ match.live_odds }}
+        </span>
 
-                                    <!-- Enhanced Stats -->
-                                    <div class="grid grid-cols-2 gap-4 text-[11px] text-gray-700 mt-4">
-                                        <!-- Home Stats -->
-                                        <div class="bg-green-50 p-2 rounded-md">
-                                            <strong class="block text-green-700 text-[12px] mb-1">?? Home Stats</strong>
-                                            <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                <span>?? GP: {{ match.home_gp }}</span>
-                                                <span>? W: {{ match.home_w }}</span>
-                                                <span>?? D: {{ match.home_d }}</span>
-                                                <span>? L: {{ match.home_l }}</span>
-                                                <span>? GF: {{ match.home_gf }}</span>
-                                                <span>??? GA: {{ match.home_ga }}</span>
-                                                <span>?? GD: {{ match.home_gd }}</span>
-                                                <span>?? Pts: {{ match.home_pts }}</span>
-                                            </div>
-                                        </div>
+        <!-- Extra Tags (GG, Over 2.5, Safe Pick, etc) -->
+        <div class="mt-4 flex flex-wrap gap-2" v-if="getMatchTags(match).length">
+          <span v-for="tag in getMatchTags(match)" :key="tag" class="text-xs px-3 py-1 rounded-full bg-yellow-100 text-yellow-800">
+            {{ tag }}
+          </span>
+        </div>
 
-                                        <!-- Away Stats -->
-                                        <div class="bg-blue-50 p-2 rounded-md">
-                                            <strong class="block text-blue-700 text-[12px] mb-1">?? Away Stats</strong>
-                                            <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                <span>?? GP: {{ match.away_gp }}</span>
-                                                <span>? W: {{ match.away_w }}</span>
-                                                <span>?? D: {{ match.away_d }}</span>
-                                                <span>? L: {{ match.away_l }}</span>
-                                                <span>? GF: {{ match.away_gf }}</span>
-                                                <span>??? GA: {{ match.away_ga }}</span>
-                                                <span>?? GD: {{ match.away_gd }}</span>
-                                                <span>?? Pts: {{ match.away_pts }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Enhanced Stats -->
+        <div class="grid grid-cols-2 gap-4 text-xs text-gray-700 mt-4">
+          <!-- Home Stats -->
+          <div class="bg-green-50 p-3 rounded-md">
+            <strong class="block text-green-700 mb-1">🏠 Home Stats</strong>
+            <div class="flex flex-wrap gap-x-2 gap-y-1">
+              <span>🎯 GP: {{ match.home_gp }}</span>
+              <span>✅ W: {{ match.home_w }}</span>
+              <span>➖ D: {{ match.home_d }}</span>
+              <span>❌ L: {{ match.home_l }}</span>
+              <span>⚽ GF: {{ match.home_gf }}</span>
+              <span>🛡️ GA: {{ match.home_ga }}</span>
+              <span>📊 GD: {{ match.home_gd }}</span>
+              <span>🏆 Pts: {{ match.home_pts }}</span>
+            </div>
+          </div>
+
+          <!-- Away Stats -->
+          <div class="bg-blue-50 p-3 rounded-md">
+            <strong class="block text-blue-700 mb-1">🚗 Away Stats</strong>
+            <div class="flex flex-wrap gap-x-2 gap-y-1">
+              <span>🎯 GP: {{ match.away_gp }}</span>
+              <span>✅ W: {{ match.away_w }}</span>
+              <span>➖ D: {{ match.away_d }}</span>
+              <span>❌ L: {{ match.away_l }}</span>
+              <span>⚽ GF: {{ match.away_gf }}</span>
+              <span>🛡️ GA: {{ match.away_ga }}</span>
+              <span>📊 GD: {{ match.away_gd }}</span>
+              <span>🏆 Pts: {{ match.away_pts }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
                                 <!-- Details Link -->
                                 <a :href="match.match_url" target="_blank"
@@ -941,10 +943,10 @@ const perPage = 50
 const tagFilter = ref('')
 // Tag filter
 if (tagFilter.value) {
-  result = result.filter(match => {
-    const tags = getMatchTags(match)
-    return tags.some(tag => tag.toLowerCase().includes(tagFilter.value.toLowerCase()))
-  })
+    result = result.filter(match => {
+        const tags = getMatchTags(match)
+        return tags.some(tag => tag.toLowerCase().includes(tagFilter.value.toLowerCase()))
+    })
 }
 
 
