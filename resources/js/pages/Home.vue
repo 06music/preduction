@@ -1275,16 +1275,16 @@ onMounted(() => {
     script1.type = 'text/javascript';
     script1.innerHTML = `
       atOptions = {
-        'key': 'a40af2ddee7a4e17cbd9b9ffc7dab35c',
+        'key': 'c68164d29f3923a1e7a7ff9be7d2e396',
         'format': 'iframe',
-        'height': 300,
-        'width': 160,
-        'params': {}
+       'height' : 50,
+		'width' : 320,
+		'params' : {}
       };
     `;
     const script2 = document.createElement('script');
     script2.type = 'text/javascript';
-    script2.src = '//www.highperformanceformat.com/a40af2ddee7a4e17cbd9b9ffc7dab35c/invoke.js';
+    script2.src = '//www.highperformanceformat.com/c68164d29f3923a1e7a7ff9be7d2e396/invoke.js';
     adContainer.value.appendChild(script1);
     adContainer.value.appendChild(script2);
   }
