@@ -28,7 +28,6 @@
                                     Football Intelligence</span>
                                 • Predictions • Analytics
                             </p>
-  <div ref="adContainer"></div>
 
                             <!-- Online User Count Section -->
                             <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
@@ -315,6 +314,7 @@
                         </div>
                     </div>
 
+  <div ref="adContainer"></div>
 
 
 
