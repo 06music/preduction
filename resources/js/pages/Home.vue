@@ -28,6 +28,7 @@
                                     Football Intelligence</span>
                                 • Predictions • Analytics
                             </p>
+  <div ref="adContainer"></div>
 
                             <!-- Online User Count Section -->
                             <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
@@ -862,6 +863,7 @@ if (tagFilter.value) {
         return tags.some(tag => tag.toLowerCase().includes(tagFilter.value.toLowerCase()))
     })
 }
+const adContainer = ref(null);
 
 
 
@@ -1258,9 +1260,36 @@ const fetchData = async () => {
 
 // Load on mount
 onMounted(() => {
-    fetchData()
+  // Load matches
+  fetchData();
 
-})
+  // Online users simulation
+  onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  setInterval(() => {
+    onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  }, 30000);
+
+  // Inject ad script
+  if (adContainer.value) {
+    const script1 = document.createElement('script');
+    script1.type = 'text/javascript';
+    script1.innerHTML = `
+      atOptions = {
+        'key': 'a40af2ddee7a4e17cbd9b9ffc7dab35c',
+        'format': 'iframe',
+        'height': 300,
+        'width': 160,
+        'params': {}
+      };
+    `;
+    const script2 = document.createElement('script');
+    script2.type = 'text/javascript';
+    script2.src = '//www.highperformanceformat.com/a40af2ddee7a4e17cbd9b9ffc7dab35c/invoke.js';
+    adContainer.value.appendChild(script1);
+    adContainer.value.appendChild(script2);
+  }
+});
+
 </script>
 
 <style>
