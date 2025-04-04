@@ -7,32 +7,47 @@ use Illuminate\Support\Facades\DB;
 
 class ForebetController extends Controller
 {
-    public function getMatches()
-    {
-        $matches = DB::table('forebet_matches as fm')
-            ->selectRaw('
-                MAX(id) as id,
-                game,
-                MAX(timestamp) as latest_time,
-                MAX(time_str) as time_str,
-                MAX(iso_time) as iso_time,
-                MAX(score) as score,
-                MAX(half_time_score) as half_time_score,
-                MAX(prediction) as prediction,
-                MAX(prob_1) as prob_1,
-                MAX(prob_x) as prob_x,
-                MAX(prob_2) as prob_2,
-                MAX(home_team) as home_team,
-                MAX(away_team) as away_team,
-                MAX(home_rank) as home_rank,
-                MAX(away_rank) as away_rank,
-                MAX(match_url) as match_url
-            ')
-            ->groupBy('game')
-            ->orderByDesc('latest_time')
-            ->get();
+    $matches = DB::table('forebet_matches as fm')
+        ->select(
+            'id',
+            'timestamp',
+            'game',
+            'time_str',
+            'iso_time',
+            'score',
+            'half_time_score',
+            'et',
+            'et_minute',
+            'prediction',
+            'prob_1',
+            'prob_x',
+            'prob_2',
+            'home_team',
+            'away_team',
+            'home_rank',
+            'away_rank',
+            'match_url',
+            'live_odds',
+            'home_pts',
+            'home_gp',
+            'home_w',
+            'home_d',
+            'home_l',
+            'home_gf',
+            'home_ga',
+            'home_gd',
+            'away_pts',
+            'away_gp',
+            'away_w',
+            'away_d',
+            'away_l',
+            'away_gf',
+            'away_ga',
+            'away_gd'
+        )
+        ->orderByDesc('timestamp')
+        ->get();
 
-        return response()->json($matches);
-    }
+    return response()->json($matches);
 
 }
