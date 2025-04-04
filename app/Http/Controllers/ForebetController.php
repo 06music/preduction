@@ -49,5 +49,5 @@ class ForebetController extends Controller
         ->get();
 
     return response()->json($matches);
-
+   }
 }
