@@ -299,17 +299,22 @@
             </select>
         </div>
 
-        <!-- Top Teams Only -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700">Team Quality</label>
-            <select
-                v-model="topTeamsFilter"
-                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-            >
-                <option value="false">All Teams</option>
-                <option value="true">Top 3 Ranked Only</option>
-            </select>
-        </div>
+       <!-- Top Teams Only -->
+<div>
+    <label class="block text-sm font-medium text-gray-700">Team Quality</label>
+    <select
+        v-model="topTeamsFilter"
+        class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+    >
+        <option value="false">All Teams</option>
+        <option value="1">Top 1 Ranked Only</option>
+        <option value="2">Top 2 Ranked Only</option>
+        <option value="3">Top 3 Ranked Only</option>
+        <option value="4">Top 4 Ranked Only</option>
+        <option value="5">Top 5 Ranked Only</option>
+    </select>
+</div>
+
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -1489,10 +1494,15 @@ if (minOdds.value || maxOdds.value) {
         result = result.filter((match) => match.league === leagueFilter.value);
     }
 
-    // Top teams filter
-    if (topTeamsFilter.value === 'true') {
-        result = result.filter((match) => isTopRanked(match.home_rank) || isTopRanked(match.away_rank));
-    }
+   // Top teams filter
+if (topTeamsFilter.value !== 'false') {
+    const maxRank = parseInt(topTeamsFilter.value);  // Get the selected rank (1 to 5)
+
+    result = result.filter((match) => {
+        return (isTopRanked(match.home_rank, maxRank) || isTopRanked(match.away_rank, maxRank));
+    });
+}
+
 
     // Apply sorting
     if (sortOption.value === 'highest-prob') {
@@ -1620,9 +1630,9 @@ const top5Today = computed(() => {
 });
 
 // Utils
-const isTopRanked = (rank) => {
-    return rank && [1, 2, 3].includes(Number(rank));
-};
+function isTopRanked(rank, maxRank) {
+    return rank <= maxRank;
+}
 
 const getHighestProbability = (match) => {
     return Math.max(match.prob_1, match.prob_x, match.prob_2);
