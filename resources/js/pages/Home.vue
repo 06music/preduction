@@ -253,181 +253,170 @@
                 <!-- Left Sidebar - Stats & Filters -->
                 <div class="space-y-6 lg:col-span-1">
                     <!-- Filters Card -->
-                    <!-- Filters Card -->
-                    <div v-if="showFilters" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                        <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-800">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5 text-red-500"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                                />
-                            </svg>
-                            Filter Matches
-                        </h3>
-                        <div class="space-y-4">
-                            <!-- Date -->
-                            <div>
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Date</label>
-                                <input
-                                    type="date"
-                                    v-model="dateFilter"
-                                    class="w-full rounded-lg border-gray-200 text-sm shadow-sm focus:border-red-500 focus:ring-red-500"
-                                />
-                            </div>
+                <!-- Filters Card -->
+<div v-if="showFilters" class="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-xl transition duration-300 hover:shadow-lg">
+    <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-800">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-red-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+            />
+        </svg>
+        <span class="font-semibold">Filter Matches</span>
+    </h3>
 
-                            <!-- Min Confidence -->
-                            <div>
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Min Confidence</label>
-                                <select
-                                    v-model="minProbability"
-                                    class="w-full rounded-lg border-gray-200 text-sm shadow-sm focus:border-red-500 focus:ring-red-500"
-                                >
-                                    <option value="0">Any %</option>
-                                    <option value="50">50%+</option>
-                                    <option value="60">60%+</option>
-                                    <option value="70">70%+</option>
-                                    <option value="80">80%+</option>
-                                </select>
-                            </div>
+    <div class="space-y-6">
+        <!-- Date -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Date</label>
+            <input
+                type="date"
+                v-model="dateFilter"
+                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+            />
+        </div>
 
-                            <!-- Top Teams Only -->
-                            <div>
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Team Quality</label>
-                                <select
-                                    v-model="topTeamsFilter"
-                                    class="w-full rounded-lg border-gray-200 text-sm shadow-sm focus:border-red-500 focus:ring-red-500"
-                                >
-                                    <option value="false">All Teams</option>
-                                    <option value="true">Top 3 Ranked Only</option>
-                                </select>
-                            </div>
+        <!-- Min Confidence -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Min Confidence</label>
+            <select
+                v-model="minProbability"
+                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+            >
+                <option value="0">Any %</option>
+                <option value="50">50%+</option>
+                <option value="60">60%+</option>
+                <option value="70">70%+</option>
+                <option value="80">80%+</option>
+            </select>
+        </div>
 
-                            <!-- <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Insights</label>
-                                <select v-model="tagFilter"
-                                    class="w-full rounded-lg border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
-                                    <option value="">All</option>
-                                    <option value="over">?? Over 2.5 Goals</option>
-                                    <option value="safe">? Safe Pick</option>
-                                </select>
-                            </div> -->
+        <!-- Top Teams Only -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Team Quality</label>
+            <select
+                v-model="topTeamsFilter"
+                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+            >
+                <option value="false">All Teams</option>
+                <option value="true">Top 3 Ranked Only</option>
+            </select>
+        </div>
 
-                            <!--  <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Min Confidence</label>
-                                <input type="range" min="0" max="100" step="10" v-model="minProbability"
-                                    class="w-full accent-red-500">
-                                <p class="text-xs text-gray-500 mt-1">Showing picks with {{ minProbability }}%+
-                                    probability</p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Predicted Result</label>
-                                <select v-model="pickFilter"
-                                    class="w-full rounded-lg border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
-                                    <option value="">All Picks</option>
-                                    <option value="1">Home Win</option>
-                                    <option value="X">Draw</option>
-                                    <option value="2">Away Win</option>
-                                </select>
-                            </div> -->
-                            <!-- Smart Insights (Tag Filter Buttons) -->
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">Smart Insights</label>
-                                <div class="flex flex-wrap gap-2">
-                                    <button
-                                        v-for="tag in smartTagOptions"
-                                        :key="tag.label"
-                                        @click="toggleTagFilter(tag.value)"
-                                        :class="[
-                                            'rounded-full border px-3 py-1 text-sm font-medium transition',
-                                            selectedTags.includes(tag.value)
-                                                ? 'border-red-300 bg-red-100 text-red-700'
-                                                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-100',
-                                        ]"
-                                    >
-                                        {{ tag.label }}
-                                    </button>
-                                </div>
-                            </div>
+        <!-- Smart Insights (Tag Filter Buttons) -->
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Smart Insights</label>
+            <div class="flex flex-wrap gap-2">
+                <button
+                    v-for="tag in smartTagOptions"
+                    :key="tag.label"
+                    @click="toggleTagFilter(tag.value)"
+                    :class="[
+                        'rounded-full border px-3 py-1 text-sm font-medium transition-all',
+                        selectedTags.includes(tag.value)
+                            ? 'border-red-300 bg-red-100 text-red-700'
+                            : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-100',
+                    ]"
+                >
+                    {{ tag.label }}
+                </button>
+            </div>
+        </div>
 
-                            <!-- Advanced Filters -->
-                            <div class="grid grid-cols-1 gap-3 pt-2">
-                                <div class="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        v-model="onlyWithOdds"
-                                        id="onlyWithOdds"
-                                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <label for="onlyWithOdds" class="text-sm text-gray-700">💸 Show only matches with odds</label>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        v-model="onlyWithStats"
-                                        id="onlyWithStats"
-                                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <label for="onlyWithStats" class="text-sm text-gray-700">📊 Show only matches with full stats</label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Odds Range Filter -->
-<!-- Odds Range Slider -->
-<div>
-  <label class="mb-1 block text-sm font-medium text-gray-700">🎯 Odds Range</label>
+        <!-- Advanced Filters -->
+        <div class="grid grid-cols-1 gap-4 pt-2">
+            <div class="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    v-model="onlyWithOdds"
+                    id="onlyWithOdds"
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label for="onlyWithOdds" class="text-sm text-gray-700">💸 Show only matches with odds</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    v-model="onlyWithStats"
+                    id="onlyWithStats"
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label for="onlyWithStats" class="text-sm text-gray-700">📊 Show only matches with full stats</label>
+            </div>
+        </div>
 
-  <div class="mb-1 flex justify-between text-xs text-gray-500">
-    <span>Min: {{ minOdds }}</span>
-    <span>Max: {{ maxOdds }}</span>
-  </div>
+        <!-- Odds Range Filter -->
+        <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">🎯 Odds Range</label>
+            <div class="mb-1 flex justify-between text-xs text-gray-500">
+                <span>Min: {{ minOdds }}</span>
+                <span>Max: {{ maxOdds }}</span>
+            </div>
 
-  <div class="flex items-center gap-2">
-    <input
-      type="range"
-      min="1"
-      max="10"
-      step="0.1"
-      v-model.number="minOdds"
-      class="w-1/2 accent-red-500"
-    />
-    <input
-      type="range"
-      min="1"
-      max="10"
-      step="0.1"
-      v-model.number="maxOdds"
-      class="w-1/2 accent-red-500"
-    />
-  </div>
+            <div class="flex items-center gap-2">
+                <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    step="0.1"
+                    v-model.number="minOdds"
+                    class="w-1/2 accent-red-500 transition-all"
+                />
+                <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    step="0.1"
+                    v-model.number="maxOdds"
+                    class="w-1/2 accent-red-500 transition-all"
+                />
+            </div>
 
-  <div class="mt-1 text-xs text-gray-400">
-    Showing picks with odds between <strong>{{ minOdds }}</strong> and <strong>{{ maxOdds }}</strong>
-  </div>
+            <div class="mt-1 text-xs text-gray-400">
+                Showing picks with odds between <strong>{{ minOdds }}</strong> and <strong>{{ maxOdds }}</strong>
+            </div>
+        </div>
+
+        <!-- Predicted Result Filter -->
+        <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">Result Prediction</label>
+            <select
+                v-model="pickFilter"
+                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+            >
+                <option value="">All Results</option>
+                <option value="1">🏠 Home Win</option>
+                <option value="X">🤝 Draw</option>
+                <option value="2">🚗 Away Win</option>
+            </select>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex justify-end gap-3">
+            <button
+                @click="resetFilters"
+                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+            >
+                Reset
+            </button>
+            <button
+                @click="applyFilters"
+                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-all"
+            >
+                Apply
+            </button>
+        </div>
+    </div>
 </div>
 
-
-
-                        <!-- Actions -->
-                        <div class="mt-6 flex justify-end gap-3">
-                            <button
-                                @click="resetFilters"
-                                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                            >
-                                Reset
-                            </button>
-                            <button @click="applyFilters" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
-                                Apply
-                            </button>
-                        </div>
-                    </div>
 
                     <!-- Modern Stats Card -->
                     <div
@@ -703,109 +692,122 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     <tr v-for="match in paginatedMatchess" :key="match.id" class="transition hover:bg-blue-50/40">
-                                        <td class="whitespace-nowrap px-4 py-2">
-                                            {{ match.time_str }}
-                                            <div class="mt-3 flex flex-wrap gap-2" v-if="getMatchTags(match).length">
-                                                <span
-                                                    v-for="tag in getMatchTags(match)"
-                                                    :key="tag"
-                                                    class="rounded-full px-3 py-1 text-xs font-medium"
-                                                    :class="{
-                                                        'bg-green-100 text-green-800': tag.includes('Confidence'),
-                                                        'bg-blue-100 text-blue-800': tag.includes('Momentum') || tag.includes('Scorer'),
-                                                        'bg-orange-100 text-orange-800': tag.includes('Upset') || tag.includes('Streak'),
-                                                        'bg-red-100 text-red-800': tag.includes('Poor Form'),
-                                                        'bg-yellow-100 text-yellow-800': tag.includes('Over') || tag.includes('Safe'),
-                                                        'bg-gray-100 text-gray-800': true,
-                                                    }"
-                                                >
-                                                    {{ tag }}
-                                                </span>
-                                            </div>
-                                        </td>
+  <td class="whitespace-nowrap px-4 py-2">
+    {{ match.time_str }}
+    <div class="mt-3 flex flex-wrap gap-2" v-if="getMatchTags(match).length">
+      <span
+        v-for="tag in getMatchTags(match)"
+        :key="tag"
+        class="rounded-full px-3 py-1 text-xs font-medium"
+        :class="{
+          'bg-green-100 text-green-800': tag.includes('Confidence'),
+          'bg-blue-100 text-blue-800': tag.includes('Momentum') || tag.includes('Scorer'),
+          'bg-orange-100 text-orange-800': tag.includes('Upset') || tag.includes('Streak'),
+          'bg-red-100 text-red-800': tag.includes('Poor Form'),
+          'bg-yellow-100 text-yellow-800': tag.includes('Over') || tag.includes('Safe'),
+          'bg-gray-100 text-gray-800': true,
+        }"
+      >
+        {{ tag }}
+      </span>
+    </div>
+  </td>
 
-                                        <!-- Game Column: Teams + Stats -->
-                                        <td class="px-4 py-2">
-                                            <div class="font-medium text-gray-800">
-                                                {{ match.home_team }} <span class="text-gray-400">vs</span> {{ match.away_team }}
-                                            </div>
+  <!-- Game Column: Teams + Stats -->
+  <td class="px-4 py-2">
+    <div class="font-medium text-gray-800">
+      {{ match.home_team }} <span class="text-gray-400">vs</span> {{ match.away_team }}
+    </div>
 
-                                            <div class="mt-2 grid grid-cols-1 gap-2 text-[11px] text-gray-700 md:grid-cols-2">
-                                                <!-- Home Team Stats -->
-                                                <div class="rounded-md bg-green-50 p-2">
-                                                    <strong class="mb-1 block text-[12px] text-green-700">🏠 Home Stats</strong>
+    <div class="mt-2 grid grid-cols-1 gap-2 text-[11px] text-gray-700 md:grid-cols-2">
+      <!-- Home Stats -->
+      <div class="rounded-md bg-green-50 p-2">
+        <strong class="mb-1 block text-[12px] text-green-700">🏠 Home Stats</strong>
+        <div class="flex flex-wrap gap-x-2 gap-y-1">
+          <span>🎯 GP: {{ match.home_gp }}</span>
+          <span>✅ W: {{ match.home_w }}</span>
+          <span>➖ D: {{ match.home_d }}</span>
+          <span>❌ L: {{ match.home_l }}</span>
+          <span>⚽ GF: {{ match.home_gf }}</span>
+          <span>🛡️ GA: {{ match.home_ga }}</span>
+          <span>📊 GD: {{ match.home_gd }}</span>
+          <span>🏆 Pts: {{ match.home_pts }}</span>
+        </div>
+      </div>
 
-                                                    <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                        <span>🎯 GP: {{ match.home_gp }}</span>
-                                                        <span>✅ W: {{ match.home_w }}</span>
-                                                        <span>➖ D: {{ match.home_d }}</span>
-                                                        <span>❌ L: {{ match.home_l }}</span>
-                                                        <span>⚽ GF: {{ match.home_gf }}</span>
-                                                        <span>🛡️ GA: {{ match.home_ga }}</span>
-                                                        <span>📊 GD: {{ match.home_gd }}</span>
-                                                        <span>🏆 Pts: {{ match.home_pts }}</span>
-                                                    </div>
-                                                </div>
+      <!-- Away Stats -->
+      <div class="rounded-md bg-blue-50 p-2">
+        <strong class="mb-1 block text-[12px] text-blue-700">🚗 Away Stats</strong>
+        <div class="flex flex-wrap gap-x-2 gap-y-1">
+          <span>🎯 GP: {{ match.away_gp }}</span>
+          <span>✅ W: {{ match.away_w }}</span>
+          <span>➖ D: {{ match.away_d }}</span>
+          <span>❌ L: {{ match.away_l }}</span>
+          <span>⚽ GF: {{ match.away_gf }}</span>
+          <span>🛡️ GA: {{ match.away_ga }}</span>
+          <span>📊 GD: {{ match.away_gd }}</span>
+          <span>🏆 Pts: {{ match.away_pts }}</span>
+        </div>
+      </div>
+    </div>
 
-                                                <!-- Away Team Stats -->
-                                                <div class="rounded-md bg-blue-50 p-2">
-                                                    <strong class="mb-1 block text-[12px] text-blue-700">🚗 Away Stats</strong>
+    <!-- Performance Score -->
+    <div class="mt-3 text-xs text-gray-600">
+      🧮 H/A Score:
+      <span
+        :class="{
+          'text-green-600 font-semibold': getHomeAwayPerformanceScore(match) >= 75,
+          'text-yellow-600 font-medium': getHomeAwayPerformanceScore(match) >= 60 && getHomeAwayPerformanceScore(match) < 75,
+          'text-red-600': getHomeAwayPerformanceScore(match) < 60
+        }"
+      >
+        {{ getHomeAwayPerformanceScore(match) }}%
+      </span>
+    </div>
+  </td>
 
-                                                    <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                        <span>🎯 GP: {{ match.home_gp }}</span>
-                                                        <span>✅ W: {{ match.home_w }}</span>
-                                                        <span>➖ D: {{ match.home_d }}</span>
-                                                        <span>❌ L: {{ match.home_l }}</span>
-                                                        <span>⚽ GF: {{ match.home_gf }}</span>
-                                                        <span>🛡️ GA: {{ match.home_ga }}</span>
-                                                        <span>📊 GD: {{ match.home_gd }}</span>
-                                                        <span>🏆 Pts: {{ match.home_pts }}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
+  <!-- Pick -->
+  <td class="px-4 py-2">
+    <span
+      class="rounded-full px-2 py-1 text-xs font-semibold"
+      :class="{
+        'bg-green-100 text-green-800': match.prediction === '1',
+        'bg-yellow-100 text-yellow-800': match.prediction === 'X',
+        'bg-red-100 text-red-800': match.prediction === '2',
+      }"
+    >
+      {{ match.prediction }}
+    </span>
+  </td>
 
-                                        <!-- Pick -->
-                                        <td class="px-4 py-2">
-                                            <span
-                                                class="rounded-full px-2 py-1 text-xs font-semibold"
-                                                :class="{
-                                                    'bg-green-100 text-green-800': match.prediction === '1',
-                                                    'bg-yellow-100 text-yellow-800': match.prediction === 'X',
-                                                    'bg-red-100 text-red-800': match.prediction === '2',
-                                                }"
-                                            >
-                                                {{ match.prediction }}
-                                            </span>
-                                        </td>
+  <!-- Probabilities -->
+  <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_1 }}%</td>
+  <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_x }}%</td>
+  <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_2 }}%</td>
 
-                                        <!-- Probabilities -->
-                                        <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_1 }}%</td>
-                                        <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_x }}%</td>
-                                        <td class="whitespace-nowrap px-2 py-2 text-center text-xs">{{ match.prob_2 }}%</td>
+  <!-- Odds -->
+  <td class="whitespace-nowrap px-2 py-2 text-center text-xs">
+    <span v-if="match.live_odds" class="rounded-full bg-indigo-100 px-2 py-0.5 font-medium text-indigo-700">
+      {{ match.live_odds }}
+    </span>
+  </td>
 
-                                        <!-- Odds -->
-                                        <td class="whitespace-nowrap px-2 py-2 text-center text-xs">
-                                            <span v-if="match.live_odds" class="rounded-full bg-indigo-100 px-2 py-0.5 font-medium text-indigo-700">
-                                                {{ match.live_odds }}
-                                            </span>
-                                        </td>
+  <!-- Rank -->
+  <td class="whitespace-nowrap px-4 py-2 text-center text-xs">
+    <div class="flex flex-col items-center text-gray-500">
+      <span>🏠 {{ match.home_rank || '-' }}</span>
+      <span>🚗 {{ match.away_rank || '-' }}</span>
+    </div>
+  </td>
 
-                                        <!-- Rank -->
-                                        <td class="whitespace-nowrap px-4 py-2 text-center text-xs">
-                                            <div class="flex flex-col items-center text-gray-500">
-                                                <span>🏠 {{ match.home_rank || '-' }}</span>
-                                                <span>🚗 {{ match.away_rank || '-' }}</span>
-                                            </div>
-                                        </td>
+  <!-- Action -->
+  <td class="whitespace-nowrap px-4 py-2 text-right">
+    <a :href="match.match_url" target="_blank" class="text-xs font-medium text-blue-600 hover:underline">
+      Details ?
+    </a>
+  </td>
+</tr>
 
-                                        <!-- Action -->
-                                        <td class="whitespace-nowrap px-4 py-2 text-right">
-                                            <a :href="match.match_url" target="_blank" class="text-xs font-medium text-blue-600 hover:underline">
-                                                Details ?
-                                            </a>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
 
@@ -866,6 +868,49 @@
                                         <span>🏠 {{ match.home_rank || '-' }}</span>
                                         <span>🚗 {{ match.away_rank || '-' }}</span>
                                     </div>
+<!-- Home/Away Score -->
+<div class="mt-3 text-sm text-center text-gray-600">
+  <div class="flex justify-center items-center gap-2">
+    <span class="text-xl font-semibold text-gray-700">🧮 H/A Score:</span>
+    <span
+      :class="{
+        'text-green-600 font-bold': getHomeAwayPerformanceScore(match) >= 75,
+        'text-yellow-600 font-semibold': getHomeAwayPerformanceScore(match) >= 60 && getHomeAwayPerformanceScore(match) < 75,
+        'text-red-600 font-semibold': getHomeAwayPerformanceScore(match) < 60
+      }"
+      class="text-2xl"
+    >
+      {{ getHomeAwayPerformanceScore(match) }}%
+    </span>
+  </div>
+
+  <!-- Home and Away Win Rates -->
+  <div class="mt-4 text-sm text-gray-700 space-y-2">
+    <div class="flex justify-between">
+      <span class="flex items-center gap-2 font-medium">
+        <span class="text-green-500">🏠</span>
+        Home Win Rate:
+      </span>
+      <span class="font-semibold">{{ getHomeWinRate(match) }}%</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="flex items-center gap-2 font-medium">
+        <span class="text-blue-500">🚗</span>
+        Away Win Rate:
+      </span>
+      <span class="font-semibold">{{ getAwayWinRate(match) }}%</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="flex items-center gap-2 font-medium">
+        <span class="text-red-500">⚠️</span>
+        Away Loss Rate:
+      </span>
+      <span class="font-semibold">{{ getAwayLossRate(match) }}%</span>
+    </div>
+  </div>
+</div>
+
+
 
                                     <!-- Live Odds -->
                                     <span v-if="match.live_odds" class="mt-2 rounded-full bg-indigo-100 px-3 py-1 font-medium text-indigo-700">
@@ -989,6 +1034,48 @@ const minOdds = ref('');
 const maxOdds = ref('');
 const matchTimeFrom = ref('');
 const matchTimeTo = ref('');
+const HWR_WEIGHT = 0.4;   // Weight of home win rate
+const HGS_WEIGHT = 0.3;   // Weight of home goals scored
+const ALR_WEIGHT = 0.2;   // Weight of away loss rate
+const GD_WEIGHT = 0.1;    // Weight of goal difference
+
+// Function to calculate Home Win Rate
+function getHomeWinRate(match) {
+  if (!match.home_gp) return 0; // Prevent division by 0
+  return ((match.home_w / match.home_gp) * 100).toFixed(1); // Return percentage with 1 decimal place
+}
+
+// Function to calculate Away Win Rate
+function getAwayWinRate(match) {
+  if (!match.away_gp) return 0; // Prevent division by 0
+  return ((match.away_w / match.away_gp) * 100).toFixed(1); // Return percentage with 1 decimal place
+}
+
+// Function to calculate Away Loss Rate (ALR)
+function getAwayLossRate(match) {
+  if (!match.away_gp) return 0; // Prevent division by 0
+  return ((match.away_l / match.away_gp) * 100).toFixed(1); // Return percentage with 1 decimal place
+}
+
+
+// Home vs Away Model
+function calculateHomeAdvantageScore(homeStats, awayStats) {
+  const homeWinRate = (homeStats.W / homeStats.GP) * 100;
+  const homeGoalsScored = homeStats.GF / homeStats.GP;
+  const awayLossRate = (awayStats.L / awayStats.GP) * 100;
+  const awayGoalsConceded = awayStats.GA / awayStats.GP;
+  const goalDifference = homeStats.GD - awayStats.GD;
+
+  // Calculate total home advantage score
+  const score =
+    (homeWinRate * HWR_WEIGHT) +
+    (homeGoalsScored * HGS_WEIGHT) -
+    (awayLossRate * ALR_WEIGHT) -
+    (awayGoalsConceded * ALR_WEIGHT) +  // More goals conceded away = worse
+    (goalDifference * GD_WEIGHT);       // Better goal difference = better performance
+
+  return score;
+}
 
 
 
@@ -1230,91 +1317,11 @@ const leagueFilter = ref('');
 const topTeamsFilter = ref('false');
 const sortOption = ref('highest-prob');
 const timeFilter = ref('');
+const pickFilter = ref('');
 
 // Sample data to ensure matches show up
 const sampleMatches = [
-    {
-        id: '1',
-        game: 'Premier League - Arsenal vs Chelsea',
-        league: 'Premier League',
-        home_team: 'Arsenal',
-        away_team: 'Chelsea',
-        prob_1: 65,
-        prob_x: 20,
-        prob_2: 15,
-        prediction: '1',
-        home_rank: 1,
-        away_rank: 4,
-        time_str: '20:00',
-        iso_time: new Date().toISOString(),
-        match_url: '#',
-        score: '2-0',
-        half_time_score: '1-0',
-    },
-    {
-        id: '2',
-        game: 'La Liga - Barcelona vs Real Madrid',
-        league: 'La Liga',
-        home_team: 'Barcelona',
-        away_team: 'Real Madrid',
-        prob_1: 40,
-        prob_x: 30,
-        prob_2: 30,
-        prediction: 'X',
-        home_rank: 2,
-        away_rank: 1,
-        time_str: '21:00',
-        iso_time: new Date().toISOString(),
-        match_url: '#',
-    },
-    {
-        id: '3',
-        game: 'Ligue 1 - PSG vs Marseille',
-        league: 'Ligue 1',
-        home_team: 'PSG',
-        away_team: 'Marseille',
-        prob_1: 75,
-        prob_x: 15,
-        prob_2: 10,
-        prediction: '1',
-        home_rank: 1,
-        away_rank: 5,
-        time_str: '19:45',
-        iso_time: new Date().toISOString(),
-        match_url: '#',
-    },
-    {
-        id: '4',
-        game: 'Bundesliga - Bayern vs Dortmund',
-        league: 'Bundesliga',
-        home_team: 'Bayern Munich',
-        away_team: 'Dortmund',
-        prob_1: 60,
-        prob_x: 25,
-        prob_2: 15,
-        prediction: '1',
-        home_rank: 1,
-        away_rank: 2,
-        time_str: '18:30',
-        iso_time: new Date().toISOString(),
-        match_url: '#',
-    },
-    {
-        id: '5',
-        game: 'Serie A - Juventus vs Milan',
-        league: 'Serie A',
-        home_team: 'Juventus',
-        away_team: 'AC Milan',
-        prob_1: 45,
-        prob_x: 30,
-        prob_2: 25,
-        prediction: '1',
-        home_rank: 3,
-        away_rank: 2,
-        time_str: '20:45',
-        iso_time: new Date().toISOString(),
-        match_url: '#',
-    },
+
 ];
 
 const mustWatchMatches = computed(() =>
@@ -1404,6 +1411,10 @@ const filteredMatches = computed(() => {
     if (onlyWithOdds.value) {
         result = result.filter((match) => !!match.live_odds && match.live_odds !== '-' && match.live_odds !== '');
     }
+// Result Prediction (1/X/2) filter
+if (pickFilter.value) {
+  result = result.filter((match) => match.prediction === pickFilter.value);
+}
 
     // Filter by stats (basic check: has GP + PTS for both sides)
     if (onlyWithStats.value) {
@@ -1585,6 +1596,16 @@ const comboConfidence = computed(() => {
     const probs = smartCombo.value.map((m) => getHighestProbability(m) / 100);
     return Math.round(probs.reduce((acc, p) => acc * p, 1) * 100);
 });
+function getHomeAwayPerformanceScore(match) {
+  const homeWinRate = (match.home_w / match.home_gp) || 0;
+  const awayLossRate = (match.away_l / match.away_gp) || 0;
+  const homeGF = match.home_gf / match.home_gp || 0;
+  const awayGA = match.away_ga / match.away_gp || 0;
+
+  const score = homeWinRate * 0.4 + (homeGF / 3) * 0.3 + awayLossRate * 0.2 + (awayGA / 2.5) * 0.1;
+
+  return Math.round(score * 100); // Return score as percentage
+}
 
 const estimatedComboReturn = computed(() => {
     if (!smartCombo.value.length) return 0;
