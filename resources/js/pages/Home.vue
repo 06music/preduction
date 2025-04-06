@@ -315,6 +315,19 @@
     </select>
 </div>
 
+<!-- Performance Score Filter -->
+<div>
+    <label class="block text-sm font-medium text-gray-700">Performance Score</label>
+    <select
+        v-model="performanceScoreFilter"
+        class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+    >
+        <option value="all">All Scores</option>
+        <option value="60-75">60% to 75%</option>
+        <option value="75-100">75% to 100%</option>
+        <option value="below-60">Below 60%</option>
+    </select>
+</div>
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -1043,6 +1056,8 @@ const HWR_WEIGHT = 0.4;   // Weight of home win rate
 const HGS_WEIGHT = 0.3;   // Weight of home goals scored
 const ALR_WEIGHT = 0.2;   // Weight of away loss rate
 const GD_WEIGHT = 0.1;    // Weight of goal difference
+const performanceScoreFilter = ref('all'); // Default to 'all'
+
 
 // Function to calculate Home Win Rate
 function getHomeWinRate(match) {
@@ -1421,6 +1436,7 @@ if (pickFilter.value) {
   result = result.filter((match) => match.prediction === pickFilter.value);
 }
 
+
     // Filter by stats (basic check: has GP + PTS for both sides)
     if (onlyWithStats.value) {
         result = result.filter((match) => match.home_gp && match.away_gp && match.home_pts && match.away_pts);
@@ -1454,6 +1470,22 @@ if (pickFilter.value) {
     return matchTime >= startTime && matchTime <= endTime;
   });
 }
+
+   if (performanceScoreFilter.value !== 'all') {
+        result = result.filter((match) => {
+            const performanceScore = getHomeAwayPerformanceScore(match);
+
+            // Filter based on selected score ranges
+            if (performanceScoreFilter.value === '60-75') {
+                return performanceScore >= 60 && performanceScore < 75;
+            } else if (performanceScoreFilter.value === '75-100') {
+                return performanceScore >= 75 && performanceScore <= 100;
+            } else if (performanceScoreFilter.value === 'below-60') {
+                return performanceScore < 60;
+            }
+            return true; // If filter is "all", return all
+        });
+    }
 
     // Time of Day filter
     if (timeFilter.value) {
