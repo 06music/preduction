@@ -416,6 +416,17 @@
                 <option value="2">🚗 Away Win</option>
             </select>
         </div>
+<!-- Not Started Filter Button -->
+<button
+    @click="showNotStarted = !showNotStarted"
+    class="group flex items-center gap-2 rounded-xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 px-4 py-2.5 shadow-sm transition-all hover:border-red-200 hover:shadow-md"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span class="font-medium text-gray-700">{{ showNotStarted ? 'Show All Matches' : 'Show Not Started Matches' }}</span>
+</button>
+
 
         <!-- Actions -->
         <div class="mt-6 flex justify-end gap-3">
@@ -1057,6 +1068,7 @@ const HGS_WEIGHT = 0.3;   // Weight of home goals scored
 const ALR_WEIGHT = 0.2;   // Weight of away loss rate
 const GD_WEIGHT = 0.1;    // Weight of goal difference
 const performanceScoreFilter = ref('all'); // Default to 'all'
+const showNotStarted = ref(false); // to toggle between showing all or not started matches
 
 
 // Function to calculate Home Win Rate
@@ -1486,7 +1498,22 @@ if (pickFilter.value) {
             return true; // If filter is "all", return all
         });
     }
+    // Filter for matches that have not started yet
+    if (showNotStarted.value) {
+        const now = new Date(); // Get the current date and time
 
+        result = result.filter((match) => {
+            // Parse match.time_str (DD/MM/YYYY HH:MM) to a Date object
+            const [day, month, yearAndTime] = match.time_str.split('/'); // Split the day, month, year+time
+            const [year, time] = yearAndTime.split(' '); // Split the year and time
+            const [hour, minute] = time.split(':'); // Split the time into hour and minute
+
+            // Create a new Date object using the parsed parts
+            const matchDate = new Date(`${month}/${day}/${year} ${hour}:${minute}`);
+
+            return matchDate > now; // Only include matches that are in the future
+        });
+    }
     // Time of Day filter
     if (timeFilter.value) {
         result = result.filter((match) => {
