@@ -1856,11 +1856,11 @@ onMounted(() => {
         adContainer.value.appendChild(script1);
         adContainer.value.appendChild(script2);
     }
-    // Inject popunder script
+   /*  // Inject popunder script
     const popunderScript = document.createElement('script');
     popunderScript.type = 'text/javascript';
     popunderScript.src = '//pl26299092.effectiveratecpm.com/49/7a/e9/497ae9bb603b8274db199fc3f14cfe81.js';
-    document.head.appendChild(popunderScript);
+    document.head.appendChild(popunderScript); */
 });
 </script>
 
