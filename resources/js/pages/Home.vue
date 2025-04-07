@@ -977,19 +977,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
     <!-- BTTS -->
 <!-- BTTS -->
-<div class="flex justify-between items-center">
-  <span class="flex items-center gap-2 font-medium">
-    <span class="text-purple-600">⚽</span> Both Teams To Score:
-  </span>
-  <span
-    :class="{
-      'text-green-600 font-semibold': isLikelyBTTS(match).result,
-      'text-red-600 font-semibold': !isLikelyBTTS(match).result,
-    }"
-  >
-    {{ isLikelyBTTS(match).confidence }} ({{ isLikelyBTTS(match).chance }})
-  </span>
-</div>
+
 
 
 
