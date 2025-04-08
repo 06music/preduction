@@ -977,7 +977,7 @@
                                     <!-- Extra Tags (GG, Over 2.5, Safe Pick, etc) -->
                                     <div class="mt-4 flex flex-wrap gap-2" v-if="getMatchTags(match).length">
                                         <span
-                                            v-for="tag in getMatchTags(match)"
+                                           v-for="tag in getMatchTags(match)"
                                             :key="tag"
                                             class="rounded-full px-3 py-1 text-xs font-medium"
                                             :class="{
@@ -995,36 +995,37 @@
 
                                     <!-- Enhanced Stats -->
                                     <div class="mt-4 grid grid-cols-2 gap-4 text-xs text-gray-700">
-                                        <!-- Home Stats -->
-                                        <div class="rounded-md bg-green-50 p-3">
-                                            <strong class="mb-1 block text-green-700">🏠 Home Stats</strong>
-                                            <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                <span>🎯 GP: {{ match.home_gp }}</span>
-                                                <span>✅ W: {{ match.home_w }}</span>
-                                                <span>➖ D: {{ match.home_d }}</span>
-                                                <span>❌ L: {{ match.home_l }}</span>
-                                                <span>⚽ GF: {{ match.home_gf }}</span>
-                                                <span>🛡️ GA: {{ match.home_ga }}</span>
-                                                <span>📊 GD: {{ match.home_gd }}</span>
-                                                <span>🏆 Pts: {{ match.home_pts }}</span>
-                                            </div>
-                                        </div>
+    <!-- Home Stats -->
+    <div class="rounded-md bg-green-50 p-3">
+        <strong class="mb-1 block text-green-700">🏠 Home Stats</strong>
+        <div class="flex flex-wrap gap-x-2 gap-y-1">
+            <span>🎯 GP: {{ match.home_gp }}</span>
+            <span>✅ W: {{ match.home_w }}</span>
+            <span>➖ D: {{ match.home_d }}</span>
+            <span>❌ L: {{ match.home_l }}</span>
+            <span>⚽ GF: {{ match.home_gf }}</span>
+            <span>🛡️ GA: {{ match.home_ga }}</span>
+            <span>📊 GD: {{ match.home_gd }}</span>
+            <span>🏆 Pts: {{ match.home_pts }}</span>
+        </div>
+    </div>
 
-                                        <!-- Away Stats -->
-                                        <div class="rounded-md bg-blue-50 p-3">
-                                            <strong class="mb-1 block text-blue-700">🚗 Away Stats</strong>
-                                            <div class="flex flex-wrap gap-x-2 gap-y-1">
-                                                <span>🎯 GP: {{ match.away_gp }}</span>
-                                                <span>✅ W: {{ match.away_w }}</span>
-                                                <span>➖ D: {{ match.away_d }}</span>
-                                                <span>❌ L: {{ match.away_l }}</span>
-                                                <span>⚽ GF: {{ match.away_gf }}</span>
-                                                <span>🛡️ GA: {{ match.away_ga }}</span>
-                                                <span>📊 GD: {{ match.away_gd }}</span>
-                                                <span>🏆 Pts: {{ match.away_pts }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
+    <!-- Away Stats -->
+    <div class="rounded-md bg-blue-50 p-3">
+        <strong class="mb-1 block text-blue-700">🚗 Away Stats</strong>
+        <div class="flex flex-wrap gap-x-2 gap-y-1">
+            <span>🎯 GP: {{ match.away_gp }}</span>
+            <span>✅ W: {{ match.away_w }}</span>
+            <span>➖ D: {{ match.away_d }}</span>
+            <span>❌ L: {{ match.away_l }}</span>
+            <span>⚽ GF: {{ match.away_gf }}</span>
+            <span>🛡️ GA: {{ match.away_ga }}</span>
+            <span>📊 GD: {{ match.away_gd }}</span>
+            <span>🏆 Pts: {{ match.away_pts }}</span>
+        </div>
+    </div>
+</div>
+
                                 </div>
 
                                 <!-- Details Link -->
@@ -1328,6 +1329,11 @@ function getTipReason(match, type = 'best') {
 
 const selectedTags = ref([]);
 const smartTagOptions = [
+    { label: '📉 Home Negative GD', value: 'home_negative_gd' },
+{ label: '📉 Away Negative GD', value: 'away_negative_gd' },
+{ label: '📉 Both Teams Negative GD', value: 'both_negative_gd' },
+
+
     { label: '🎯 Consistent Scorer', value: 'scorer' },
     { label: '🔥 Streak Team', value: 'streak' },
     { label: '⚡ Attacking Momentum', value: 'momentum' },
@@ -1372,8 +1378,8 @@ const loadMores = () => {
 const todayISODate = new Date().toISOString().split('T')[0];
 
 const dateFilter = ref(todayISODate);
-const startDateFilter = ref('');
-const endDateFilter = ref('');
+const startDateFilter = ref(todayISODate);
+const endDateFilter = ref(todayISODate);
 const minProbability = ref('0');
 const leagueFilter = ref('');
 const topTeamsFilter = ref('false');
@@ -1577,6 +1583,12 @@ if (pickFilter.value) {
             return selectedTags.value.every((tag) => tags.some((t) => t.toLowerCase().includes(tag)));
         });
     }
+    if (selectedTags.value.includes('negative_gd')) {
+    result = result.filter((match) => {
+        return (match.home_gd < 0 || match.away_gd < 0);
+    });
+}
+
     // Odds Range filter (inside filteredMatches computed!)
 if (minOdds.value || maxOdds.value) {
     const min = parseFloat(minOdds.value) || 0;
@@ -1815,6 +1827,14 @@ function getMatchTags(match) {
     } else if (highestProb >= 60) {
         tags.push('🧠 AI Confidence: Medium');
     }
+    if (match.home_gd < 0 && match.away_gd < 0) {
+  tags.push('📉 Both Teams Negative GD');
+} else if (match.home_gd < 0) {
+  tags.push('📉 Home Negative GD');
+} else if (match.away_gd < 0) {
+  tags.push('📉 Away Negative GD');
+}
+
 
     // ⚡ Attacking Momentum
     if (totalGF > totalGA + 10) {
