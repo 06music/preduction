@@ -274,15 +274,43 @@
     </h3>
 
     <div class="space-y-6">
+        <!-- Quick Date Shortcuts -->
+<div class="flex gap-2 text-sm">
+  <button
+    @click="setToday"
+    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-100"
+  >
+    📅 Today
+  </button>
+  <button
+    @click="setTomorrow"
+    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-100"
+  >
+    ⏭️ Tomorrow
+  </button>
+</div>
+
         <!-- Date -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700">Date</label>
-            <input
-                type="date"
-                v-model="dateFilter"
-                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-            />
-        </div>
+      <!-- Date Range -->
+<div class="grid grid-cols-2 gap-3">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Start Date</label>
+    <input
+      type="date"
+      v-model="startDateFilter"
+      class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+    />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">End Date</label>
+    <input
+      type="date"
+      v-model="endDateFilter"
+      class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+    />
+  </div>
+</div>
+
 
         <!-- Min Confidence -->
         <div>
@@ -328,37 +356,6 @@
         <option value="below-60">Below 60%</option>
     </select>
 </div>
-<!-- BTTS Filter -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Both Teams To Score (BTTS)</label>
-  <select
-    v-model="bttsFilter"
-    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-  >
-    <option value="">All</option>
-    <option value="yes">Yes</option>
-    <option value="no">No</option>
-  </select>
-</div>
-<!-- Home Over 2.5 Goals Filter -->
-
-<!-- Total Goals Tip Filter -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">📈 Total Goals Tip</label>
-  <select
-    v-model="totalGoalsTipFilter"
-    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-  >
-    <option value="">All Tips</option>
-    <option value="Under 2.5">Under 2.5</option>
-    <option value="Over 2.5">Over 2.5</option>
-    <option value="Over 3.5">Over 3.5</option>
-    <option value="Under 3.5">Under 3.5</option>
-    <option value="Over 1.5">Over 1.5</option>
-    <option value="Under 1.5">Under 1.5</option>
-  </select>
-</div>
-
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -929,10 +926,8 @@
                                         <span>🚗 {{ match.away_rank || '-' }}</span>
                                     </div>
 <!-- Home/Away Score -->
-<!-- Match Intelligence Section -->
-<div class="mt-3 text-sm text-center text-gray-600 rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm">
-  <!-- H/A Score -->
-  <div class="flex justify-center items-center gap-2 mb-4">
+<div class="mt-3 text-sm text-center text-gray-600">
+  <div class="flex justify-center items-center gap-2">
     <span class="text-xl font-semibold text-gray-700">🧮 H/A Score:</span>
     <span
       :class="{
@@ -946,55 +941,31 @@
     </span>
   </div>
 
-  <!-- Win/Loss Stats -->
-  <div class="grid grid-cols-1 gap-2 text-sm text-gray-700 sm:grid-cols-3 mb-6">
-    <div class="flex justify-between items-center">
+  <!-- Home and Away Win Rates -->
+  <div class="mt-4 text-sm text-gray-700 space-y-2">
+    <div class="flex justify-between">
       <span class="flex items-center gap-2 font-medium">
-        <span class="text-green-500">🏠</span> Home Win Rate:
+        <span class="text-green-500">🏠</span>
+        Home Win Rate:
       </span>
       <span class="font-semibold">{{ getHomeWinRate(match) }}%</span>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between">
       <span class="flex items-center gap-2 font-medium">
-        <span class="text-blue-500">🚗</span> Away Win Rate:
+        <span class="text-blue-500">🚗</span>
+        Away Win Rate:
       </span>
       <span class="font-semibold">{{ getAwayWinRate(match) }}%</span>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between">
       <span class="flex items-center gap-2 font-medium">
-        <span class="text-red-500">⚠️</span> Away Loss Rate:
+        <span class="text-red-500">⚠️</span>
+        Away Loss Rate:
       </span>
       <span class="font-semibold">{{ getAwayLossRate(match) }}%</span>
     </div>
   </div>
-
-  <!-- Divider -->
-  <div class="border-t border-gray-200 mb-4"></div>
-
-  <!-- 🤖 AI Predictions -->
-  <h4 class="text-center font-semibold text-gray-800 mb-3">🤖 Smart Predictions</h4>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-    <!-- BTTS -->
-<!-- BTTS -->
-
-
-
-
-    <!-- Over/Under -->
-    <div class="flex justify-between items-center">
-      <span class="flex items-center gap-2 font-medium">
-        <span class="text-indigo-600">📈</span> Total Goals Tip:
-      </span>
-      <span class="font-semibold text-indigo-700">
-        {{ getOverPrediction(match) }}
-      </span>
-    </div>
-
-
-  </div>
 </div>
-
 
 
 
@@ -1069,7 +1040,7 @@
                             <!-- See More (Grid version) -->
                             <div v-if="hasMorePagess" class="col-span-full p-4 text-center">
                                 <button @click="loadMores" class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700">
-                                    See More Matches
+                                    See More Matches ?
                                 </button>
                             </div>
                         </div>
@@ -1401,19 +1372,14 @@ const loadMores = () => {
 const todayISODate = new Date().toISOString().split('T')[0];
 
 const dateFilter = ref(todayISODate);
+const startDateFilter = ref('');
+const endDateFilter = ref('');
 const minProbability = ref('0');
 const leagueFilter = ref('');
 const topTeamsFilter = ref('false');
 const sortOption = ref('highest-prob');
 const timeFilter = ref('');
 const pickFilter = ref('');
-// Smart filters
-const bttsFilter = ref(null);              // or 'yes', 'no'
-const homeOver25Filter = ref(null);        // or 'yes', 'no'
-const awayOver25Filter = ref(null);        // or 'yes', 'no'
-const totalGoalsTipFilter = ref(null);     // or 'over', 'under'
-const homeAwayScoreFilter = ref('all');    // 'all', '75+', '60-75', 'below-60'
-
 
 // Sample data to ensure matches show up
 const sampleMatches = [
@@ -1489,94 +1455,6 @@ const topTeamMatchesCount = computed(() => {
     return filteredMatches.value.filter((match) => isTopRanked(match.home_rank) || isTopRanked(match.away_rank)).length;
 });
 
-function isLikelyBTTS(match) {
-  const { avgGF, avgGA, avgTotalGoals } = getMatchStats(match);
-
-  const condition1 = avgGF > 1.3;
-  const condition2 = avgGA > 1.1;
-  const condition3 = avgTotalGoals > 2.6;
-
-  const confidentBTTS = condition1 && condition2 && condition3;
-
-  const chance = Math.min(
-    ((avgGF > 0.8 ? avgGF : 0.8) * (avgGA > 0.8 ? avgGA : 0.8)) * 40,
-    95
-  ).toFixed(1) + '%';
-
-  return {
-    result: confidentBTTS,
-    confidence: confidentBTTS ? '✅ HIGH (80-90%)' : '❌ LOW (<50%)',
-    chance: chance
-  };
-}
-
-
-
-
-function getOverPrediction(match) {
-  const { avgTotalGoals } = getMatchStats(match);
-
-  if (avgTotalGoals > 3.4) return '🔥 Over 3.5 (Confidence: 85%)';
-  if (avgTotalGoals > 2.8) return '✅ Over 2.5 (Confidence: 75%)';
-  if (avgTotalGoals > 2.0) return '🟡 Over 1.5 (Confidence: 65%)';
-  return '🔵 Under 1.5 (Confidence: 40%)';
-}
-
-function getMatchStats(match) {
-  const gamesPlayed = match.home_gp || 1;
-
-  const avgGF = match.home_gf / gamesPlayed; // Goals For
-  const avgGA = match.home_ga / gamesPlayed; // Goals Against
-  const avgTotalGoals = avgGF + avgGA;
-
-  const BTTSProbability = Math.min(
-    ((avgGF > 0.9 ? 1 : avgGF) * (avgGA > 0.9 ? 1 : avgGA)) * 100,
-    95
-  ); // crude logic to estimate BTTS %
-
-  const over25Chance = Math.min((avgTotalGoals / 2.5) * 100, 100); // chance of 2.5+
-
-  return {
-    avgGF,
-    avgGA,
-    avgTotalGoals,
-    BTTSProbability: BTTSProbability.toFixed(1) + '%',
-    over25Chance: over25Chance.toFixed(1) + '%',
-  };
-}
-function analyzeMatch(match) {
-  const stats = getMatchStats(match);
-  const btts = computed(() => isLikelyBTTS(props.match))
-  const over = getOverPrediction(match);
-
-  return {
-    avg_goals_per_match: stats.avgTotalGoals.toFixed(2),
-    BTTS: {
-      prediction: btts.result ? 'Yes' : 'No',
-      confidence: btts.confidence,
-      chance: stats.BTTSProbability,
-    },
-    Over25: {
-      prediction: over,
-      chance: stats.over25Chance,
-    }
-  };
-}
-
-
-function isHomeLikelyToScoreOver25(match) {
-  const hGF = match.home_gf / match.home_gp || 0;
-  const aGA = match.away_ga / match.away_gp || 0;
-  return hGF > 2 && aGA > 1.4;
-}
-
-function isAwayLikelyToScoreOver25(match) {
-  const aGF = match.away_gf / match.away_gp || 0;
-  const hGA = match.home_ga / match.home_gp || 0;
-  return aGF > 2 && hGA > 1.4;
-}
-
-
 const averageConfidence = computed(() => {
     if (filteredMatches.value.length === 0) return 0;
 
@@ -1590,37 +1468,6 @@ const averageConfidence = computed(() => {
 // Computed: Filtered Matches
 const filteredMatches = computed(() => {
     let result = [...matches.value];
-
-
-// ⬇️ ✅ SMART FILTERS BELOW ⬇️
-
-result = result.filter((match) => {
-    const haScore = getHomeAwayPerformanceScore(match);
-
-    // H/A Score filter
-    if (homeAwayScoreFilter.value === '75+' && haScore < 75) return false;
-    if (homeAwayScoreFilter.value === '60-75' && (haScore < 60 || haScore >= 75)) return false;
-    if (homeAwayScoreFilter.value === 'below-60' && haScore >= 60) return false;
-
-    // BTTS filter
-    if (bttsFilter.value === 'yes' && !isLikelyBTTS(match)) return false;
-    if (bttsFilter.value === 'no' && isLikelyBTTS(match)) return false;
-
-    // Home Over 2.5 Goals filter
-    if (homeOver25Filter.value === 'yes' && !isHomeLikelyToScoreOver25(match)) return false;
-    if (homeOver25Filter.value === 'no' && isHomeLikelyToScoreOver25(match)) return false;
-
-    // Away Over 2.5 Goals filter
-    if (awayOver25Filter.value === 'yes' && !isAwayLikelyToScoreOver25(match)) return false;
-    if (awayOver25Filter.value === 'no' && isAwayLikelyToScoreOver25(match)) return false;
-
-    // Total Goals Tip filter
-    if (totalGoalsTipFilter.value && getOverPrediction(match) !== totalGoalsTipFilter.value) return false;
-
-    return true;
-  });
-
-
 
     // Filter by odds
     if (onlyWithOdds.value) {
@@ -1637,18 +1484,18 @@ if (pickFilter.value) {
         result = result.filter((match) => match.home_gp && match.away_gp && match.home_pts && match.away_pts);
     }
 
-    // Date filter (local, not UTC)
-    if (dateFilter.value) {
-        const selectedDate = new Date(dateFilter.value);
-        result = result.filter((match) => {
-            const matchDate = new Date(match.iso_time);
-            return (
-                matchDate.getFullYear() === selectedDate.getFullYear() &&
-                matchDate.getMonth() === selectedDate.getMonth() &&
-                matchDate.getDate() === selectedDate.getDate()
-            );
-        });
-    }
+    if (startDateFilter.value || endDateFilter.value) {
+  const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
+  const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
+
+  result = result.filter((match) => {
+    const matchDate = new Date(match.iso_time);
+    if (start && matchDate < start) return false;
+    if (end && matchDate > end) return false;
+    return true;
+  });
+}
+
 
     if (matchTimeFrom.value && matchTimeTo.value) {
   const [startHour, startMinute] = matchTimeFrom.value.split(':').map(Number);
@@ -1681,6 +1528,8 @@ if (pickFilter.value) {
             return true; // If filter is "all", return all
         });
     }
+
+
     // Filter for matches that have not started yet
     if (showNotStarted.value) {
         const now = new Date(); // Get the current date and time
@@ -1696,9 +1545,21 @@ if (pickFilter.value) {
 
             return matchDate > now; // Only include matches that are in the future
         });
+        result.sort((a, b) => {
+  const [dayA, monthA, yearAndTimeA] = a.time_str.split('/');
+  const [yearA, timeA] = yearAndTimeA.split(' ');
+  const [hourA, minuteA] = timeA.split(':');
+  const dateA = new Date(`${monthA}/${dayA}/${yearA} ${hourA}:${minuteA}`);
+
+  const [dayB, monthB, yearAndTimeB] = b.time_str.split('/');
+  const [yearB, timeB] = yearAndTimeB.split(' ');
+  const [hourB, minuteB] = timeB.split(':');
+  const dateB = new Date(`${monthB}/${dayB}/${yearB} ${hourB}:${minuteB}`);
+
+  return dateA - dateB;
+});
+
     }
-
-
     // Time of Day filter
     if (timeFilter.value) {
         result = result.filter((match) => {
@@ -1763,10 +1624,20 @@ if (topTeamsFilter.value !== 'false') {
 
     return result;
 });
-
-
-
 const onlineUsers = ref(0);
+function setToday() {
+  const today = new Date().toISOString().split('T')[0];
+  startDateFilter.value = today;
+  endDateFilter.value = today;
+}
+
+function setTomorrow() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const isoTomorrow = tomorrow.toISOString().split('T')[0];
+  startDateFilter.value = isoTomorrow;
+  endDateFilter.value = isoTomorrow;
+}
 
 onMounted(() => {
     // Simulate random active users
@@ -2044,11 +1915,7 @@ onMounted(() => {
         adContainer.value.appendChild(script1);
         adContainer.value.appendChild(script2);
     }
-   /*  // Inject popunder script
-    const popunderScript = document.createElement('script');
-    popunderScript.type = 'text/javascript';
-    popunderScript.src = '//pl26299092.effectiveratecpm.com/49/7a/e9/497ae9bb603b8274db199fc3f14cfe81.js';
-    document.head.appendChild(popunderScript); */
+
 });
 </script>
 
