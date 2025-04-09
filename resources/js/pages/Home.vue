@@ -898,8 +898,8 @@
                                                 'bg-red-100 text-red-800': match.prediction === '2',
                                             }"
                                         >
-                                            {{ match.prediction }}
-                                        </span>
+                                        🧠  <strong>{{ getPredictionType(match) }}</strong>
+                                    </span>
                                     </div>
 
                                     <!-- Probabilities -->
@@ -1329,16 +1329,21 @@ function getTipReason(match, type = 'best') {
 
 const selectedTags = ref([]);
 const smartTagOptions = [
-    { label: '📉 Home Negative GD', value: 'home_negative_gd' },
-{ label: '📉 Away Negative GD', value: 'away_negative_gd' },
-{ label: '📉 Both Teams Negative GD', value: 'both_negative_gd' },
+  { label: '📉 Home Negative GD', value: '📉 Home Negative GD' },
+  { label: '📉 Away Negative GD', value: '📉 Away Negative GD' },
+  { label: '📉 Both Teams Negative GD', value: '📉 Both Teams Negative GD' },
+  { label: '🎯 Consistent Scorer', value: '🎯 Consistent Scorer' },
+  { label: '🔥 Streak Team', value: '🔥 Streak Team' },
+  { label: '⚡ Attacking Momentum', value: '⚡ Attacking Momentum' },
+  { label: '😮 Upset Alert', value: '😮 Upset Alert' },
+  { label: '🎯 Over 2.5 Goals', value: '🎯 Over 2.5 Goals' },
+  { label: '🛡️ Safe Pick', value: '🛡️ Safe Pick' },
+  { label: '🌅 Morning Kickoff', value: '🌅 Morning Kickoff' },
+{ label: '🌤️ Afternoon Match', value: '🌤️ Afternoon Match' },
+{ label: '🌙 Evening Clash', value: '🌙 Evening Clash' },
 
-
-    { label: '🎯 Consistent Scorer', value: 'scorer' },
-    { label: '🔥 Streak Team', value: 'streak' },
-    { label: '⚡ Attacking Momentum', value: 'momentum' },
-    { label: '😮 Upset Alert', value: 'upset' },
 ];
+
 // Tag filter
 if (tagFilter.value) {
     result = result.filter((match) => {
@@ -1578,15 +1583,16 @@ if (pickFilter.value) {
         });
     }
     if (selectedTags.value.length > 0) {
-        result = result.filter((match) => {
-            const tags = getMatchTags(match);
-            return selectedTags.value.every((tag) => tags.some((t) => t.toLowerCase().includes(tag)));
-        });
-    }
-    if (selectedTags.value.includes('negative_gd')) {
-    result = result.filter((match) => {
-        return (match.home_gd < 0 || match.away_gd < 0);
-    });
+  result = result.filter((match) => {
+    const tags = getMatchTags(match);
+    return selectedTags.value.every((tag) => tags.includes(tag));
+  });
+}
+
+if (selectedTags.value.includes('negative_gd')) {
+  result = result.filter((match) => {
+    return (match.home_gd < 0 || match.away_gd < 0);
+  });
 }
 
     // Odds Range filter (inside filteredMatches computed!)
@@ -1767,13 +1773,19 @@ function isTopRanked(rank, maxRank) {
 const getHighestProbability = (match) => {
     return Math.max(match.prob_1, match.prob_x, match.prob_2);
 };
-
 const getPredictionType = (match) => {
-    const maxProb = getHighestProbability(match);
-    if (maxProb === match.prob_1) return 'Home Win';
-    if (maxProb === match.prob_x) return 'Draw';
-    return 'Away Win';
+  const highest = getHighestProbability(match);
+
+  const isClose = (a, b) => Math.abs(a - b) < 0.01;
+
+  if (isClose(highest, match.prob_1)) return '1';
+  if (isClose(highest, match.prob_x)) return 'X';
+  if (isClose(highest, match.prob_2)) return '2';
+
+  return '?';
 };
+
+
 
 const formatDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -1791,91 +1803,123 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
-    dateFilter.value = '';
-    minProbability.value = '0';
-    leagueFilter.value = '';
-    topTeamsFilter.value = 'false';
-    sortOption.value = 'highest-prob';
-    timeFilter.value = '';
-    minOdds.value = '';       // 👈 Reset min odds
-    maxOdds.value = '';       // 👈 Reset max odds
-    selectedTags.value = [];  // Optional: reset tag filters
+  dateFilter.value = '';
+  minProbability.value = '0';
+  leagueFilter.value = '';
+  topTeamsFilter.value = 'false';
+  sortOption.value = 'highest-prob';
+  timeFilter.value = '';
+  minOdds.value = '';
+  maxOdds.value = '';
+  selectedTags.value = [];
+  performanceScoreFilter.value = 'all';
+  matchTimeFrom.value = '';
+  matchTimeTo.value = '';
+  pickFilter.value = '';
+  onlyWithOdds.value = false;
+  onlyWithStats.value = false;
 };
+
+
 function getMatchTags(match) {
-    const tags = [];
+  const tags = [];
 
-    const hGF = parseInt(match.home_gf || 0);
-    const hGA = parseInt(match.home_ga || 0);
-    const aGF = parseInt(match.away_gf || 0);
-    const aGA = parseInt(match.away_ga || 0);
-    const hW = parseInt(match.home_w || 0);
-    const hL = parseInt(match.home_l || 0);
-    const aW = parseInt(match.away_w || 0);
-    const aL = parseInt(match.away_l || 0);
-    const hPts = parseInt(match.home_pts || 0);
-    const aPts = parseInt(match.away_pts || 0);
-    const homeRank = parseInt(match.home_rank || 0);
-    const awayRank = parseInt(match.away_rank || 0);
+  // 1. 📊 Extract data safely (parseInt + fallback to 0)
+  const hGF = parseInt(match.home_gf || 0); // Home Goals For
+  const hGA = parseInt(match.home_ga || 0); // Home Goals Against
+  const aGF = parseInt(match.away_gf || 0); // Away Goals For
+  const aGA = parseInt(match.away_ga || 0); // Away Goals Against
 
-    const totalGF = hGF + aGF;
-    const totalGA = hGA + aGA;
-    const highestProb = getHighestProbability(match);
+  const hW = parseInt(match.home_w || 0);   // Home Wins
+  const hL = parseInt(match.home_l || 0);   // Home Losses
+  const aW = parseInt(match.away_w || 0);   // Away Wins
+  const aL = parseInt(match.away_l || 0);   // Away Losses
 
-    // 💡 Confidence Level Tags
-    if (highestProb >= 75) {
-        tags.push(`💡 Pick Confidence: High — ${highestProb}%`);
-    } else if (highestProb >= 60) {
-        tags.push('🧠 AI Confidence: Medium');
+  const hPts = parseInt(match.home_pts || 0);
+  const aPts = parseInt(match.away_pts || 0);
+
+  const homeRank = parseInt(match.home_rank || 0);
+  const awayRank = parseInt(match.away_rank || 0);
+
+  const totalGF = hGF + aGF;
+  const totalGA = hGA + aGA;
+  const highestProb = getHighestProbability(match); // returns max(prob_1, prob_x, prob_2)
+
+
+  // 11. 🕒 Time of Day Tags
+if (match.time_str) {
+  const timePart = match.time_str.split(' ')[1]; // e.g., "14:30"
+  if (timePart) {
+    const hour = parseInt(timePart.split(':')[0]);
+    if (!isNaN(hour)) {
+      if (hour < 12) {
+        tags.push('🌅 Morning Kickoff');
+      } else if (hour < 18) {
+        tags.push('🌤️ Afternoon Match');
+      } else {
+        tags.push('🌙 Evening Clash');
+      }
     }
-    if (match.home_gd < 0 && match.away_gd < 0) {
-  tags.push('📉 Both Teams Negative GD');
-} else if (match.home_gd < 0) {
-  tags.push('📉 Home Negative GD');
-} else if (match.away_gd < 0) {
-  tags.push('📉 Away Negative GD');
+  }
 }
 
+  // 2. 💡 Confidence Level
+  if (highestProb >= 75) {
+    tags.push(`💡 Pick Confidence: High — ${highestProb}%`);
+  } else if (highestProb >= 60) {
+    tags.push('🧠 AI Confidence: Medium');
+  }
 
-    // ⚡ Attacking Momentum
-    if (totalGF > totalGA + 10) {
-        tags.push('⚡ Attacking Momentum');
-    }
+  // 3. 📉 Negative Goal Difference
+  if (match.home_gd < 0 && match.away_gd < 0) {
+    tags.push('📉 Both Teams Negative GD');
+  } else if (match.home_gd < 0) {
+    tags.push('📉 Home Negative GD');
+  } else if (match.away_gd < 0) {
+    tags.push('📉 Away Negative GD');
+  }
 
-    // 😮 Upset Alert
-    if (homeRank > awayRank && match.prob_1 > 60) {
-        tags.push('😮 Upset Alert');
-    }
+  // 4. ⚡ Attacking Momentum (if total GF much higher than GA)
+  if (totalGF > totalGA + 10) {
+    tags.push('⚡ Attacking Momentum');
+  }
 
-    // 🎯 Consistent Scorer (very high GF)
-    if (hGF > 40 || aGF > 40) {
-        tags.push('🎯 Consistent Scorer');
-    }
+  // 5. 😮 Upset Alert (lower ranked home team with high win prob)
+  if (homeRank > awayRank && match.prob_1 > 60) {
+    tags.push('😮 Upset Alert');
+  }
 
-    // 🔥 Streak Team (5+ wins)
-    if (hW >= 5 || aW >= 5) {
-        tags.push('🔥 Streak Team');
-    }
+  // 6. 🎯 Consistent Scorer
+  if (hGF > 40 || aGF > 40) {
+    tags.push('🎯 Consistent Scorer');
+  }
 
-    // 📉 Poor Form (more losses than wins)
-    if (match.home_gp >= 5 && match.home_l > match.home_w) {
-        tags.push('📉 Home Poor Form');
-    }
-    if (match.away_gp >= 5 && match.away_l > match.away_w) {
-        tags.push('📉 Away Poor Form');
-    }
+  // 7. 🔥 Streak Team (5+ wins)
+  if (hW >= 5 || aW >= 5) {
+    tags.push('🔥 Streak Team');
+  }
 
-    // 🎯 Over 2.5 Goals
-    if (totalGF + totalGA > 70 || (hGF > 30 && aGF > 30)) {
-        tags.push('🎯 Over 2.5 Goals');
-    }
+  // 8. 📉 Poor Form
+  if (match.home_gp >= 5 && hL > hW) {
+    tags.push('📉 Home Poor Form');
+  }
+  if (match.away_gp >= 5 && aL > aW) {
+    tags.push('📉 Away Poor Form');
+  }
 
-    // 🛡️ Safe Pick
-    if (Math.abs(hPts - aPts) > 20 && (hPts > 0 || aPts > 0)) {
-        tags.push('🛡️ Safe Pick');
-    }
+  // 9. 🎯 Over 2.5 Goals potential
+  if (totalGF + totalGA > 70 || (hGF > 30 && aGF > 30)) {
+    tags.push('🎯 Over 2.5 Goals');
+  }
 
-    return tags;
+  // 10. 🛡️ Safe Pick (big point difference)
+  if (Math.abs(hPts - aPts) > 20 && (hPts > 0 || aPts > 0)) {
+    tags.push('🛡️ Safe Pick');
+  }
+
+  return tags;
 }
+
 
 // Fetch Matches
 const fetchData = async () => {
