@@ -343,19 +343,23 @@
     </select>
 </div>
 
-<!-- Performance Score Filter -->
+<!-- H/A Score Filter -->
 <div>
-    <label class="block text-sm font-medium text-gray-700">Performance Score</label>
-    <select
-        v-model="performanceScoreFilter"
-        class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-    >
-        <option value="all">All Scores</option>
-        <option value="60-75">60% to 75%</option>
-        <option value="75-100">75% to 100%</option>
-        <option value="below-60">Below 60%</option>
-    </select>
+  <label class="block text-sm font-medium text-gray-700">H/A Score</label>
+  <select
+    v-model="haScoreFilter"
+    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+  >
+    <option value="all">All</option>
+    <option value="0-30">0–30%</option>
+    <option value="30-60">30–60%</option>
+    <option value="60-70">60–70%</option>
+    <option value="70-80">70–80%</option>
+    <option value="80-100">80–100%</option>
+  </select>
 </div>
+
+
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -1067,6 +1071,7 @@
 <script setup>
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
+const haScoreFilter = ref('all'); // Options: all, 60+, 75+
 
 // State
 const matches = ref([]);
@@ -1479,6 +1484,29 @@ const averageConfidence = computed(() => {
 // Computed: Filtered Matches
 const filteredMatches = computed(() => {
     let result = [...matches.value];
+
+
+    //h/a filter
+    if (haScoreFilter.value !== 'all') {
+  result = result.filter((match) => {
+    const haScore = getHomeAwayPerformanceScore(match); // Returns percentage
+
+    switch (haScoreFilter.value) {
+      case '0-30':
+        return haScore >= 0 && haScore < 30;
+      case '30-60':
+        return haScore >= 30 && haScore < 60;
+      case '60-70':
+        return haScore >= 60 && haScore < 70;
+      case '70-80':
+        return haScore >= 70 && haScore < 80;
+      case '80-100':
+        return haScore >= 80 && haScore <= 100;
+      default:
+        return true;
+    }
+  });
+}
 
     // Filter by odds
     if (onlyWithOdds.value) {
