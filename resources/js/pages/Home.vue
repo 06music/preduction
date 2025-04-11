@@ -1103,7 +1103,14 @@ const ALR_WEIGHT = 0.2;   // Weight of away loss rate
 const GD_WEIGHT = 0.1;    // Weight of goal difference
 const performanceScoreFilter = ref('all'); // Default to 'all'
 const showNotStarted = ref(false); // to toggle between showing all or not started matches
+// Historical data
+const hOver25Rate = homeOver25 / homeMatchesPlayed;
+const aOver25Rate = awayOver25 / awayMatchesPlayed;
+const over25Confidence = ((hOver25Rate + aOver25Rate) / 2) * 100;
 
+// Goal productivity logic
+const goalActivity = totalGF + totalGA;
+const isHighScoringTeam = (homeGF > 30 && awayGF > 30);
 
 // Function to calculate Home Win Rate
 function getHomeWinRate(match) {
@@ -1939,7 +1946,13 @@ if (match.time_str) {
   if (totalGF + totalGA > 70 || (hGF > 30 && aGF > 30)) {
     tags.push('🎯 Over 2.5 Goals');
   }
-
+// Super strong Over 2.5 detection
+if (
+  over25Confidence >= 65 &&
+  (goalActivity > 70 || isHighScoringTeam)
+) {
+  tags.push(`🎯 Over 2.5 Goals (${over25Confidence.toFixed(0)}%)`);
+}
   // 10. 🛡️ Safe Pick (big point difference)
   if (Math.abs(hPts - aPts) > 20 && (hPts > 0 || aPts > 0)) {
     tags.push('🛡️ Safe Pick');
