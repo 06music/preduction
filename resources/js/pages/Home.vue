@@ -1936,7 +1936,7 @@ if (match.time_str) {
   }
 
   // 9. 🎯 Over 2.5 Goals potential
-  if (totalGF + totalGA > 70 || (hGF > 30 && aGF > 30)) {
+  if (totalGF + totalGA > 80 || (hGF > 45 && aGF > 45)) {
     tags.push('🎯 Over 2.5 Goals');
   }
 
