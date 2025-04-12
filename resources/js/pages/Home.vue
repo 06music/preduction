@@ -310,6 +310,27 @@
     />
   </div>
 </div>
+<!-- Time Range Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🕒 Time of Day Range</label>
+  <div class="text-xs text-gray-500 mb-2 flex justify-between">
+    <span>From: {{ timeRangeStart }}</span>
+    <span>To: {{ timeRangeEnd }}</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <input
+      type="time"
+      v-model="timeRangeStart"
+      class="w-1/2 rounded border-gray-300 text-sm shadow-sm focus:ring-red-500"
+    />
+    <input
+      type="time"
+      v-model="timeRangeEnd"
+      class="w-1/2 rounded border-gray-300 text-sm shadow-sm focus:ring-red-500"
+    />
+  </div>
+</div>
+
 
 
         <!-- Min Confidence -->
@@ -359,39 +380,75 @@
   </select>
 </div>
 
-<!-- GP Filter -->
-<div class="flex items-center gap-2">
+<!-- GP Filter Slider: Minimum Games Played (Both Teams) -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Minimum Games Played (GP)</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minGP }}</span>
+    <span class="text-gray-400">(Both Teams)</span>
+  </div>
   <input
-    type="checkbox"
-    v-model="onlyGPAbove10"
-    id="onlyGPAbove10"
-    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+    type="range"
+    min="1"
+    max="30"
+    step="1"
+    v-model.number="minGP"
+    class="w-full accent-blue-500 transition-all"
   />
-  <label for="onlyGPAbove10" class="text-sm text-gray-700">📈 GP > 10 (Both Teams)</label>
 </div>
 
-<div class="flex items-center gap-2">
+<!-- Negative GD Slider: Maximum Negative Goal Difference -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Max Negative GD</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Max: {{ maxNegativeGD }}</span>
+    <span class="text-gray-400">(e.g., -30)</span>
+  </div>
   <input
-    type="checkbox"
-    v-model="negativeGDBelow30"
-    id="negativeGDBelow30"
-    class="rounded border-gray-300 text-red-600 focus:ring-red-500"
+    type="range"
+    min="-50"
+    max="0"
+    step="1"
+    v-model.number="maxNegativeGD"
+    class="w-full accent-red-500 transition-all"
   />
-  <label for="negativeGDBelow30" class="text-sm text-gray-700">
-    📉 Show matches with GD &lt; -30
-  </label>
 </div>
-<div class="flex items-center gap-2">
+
+<!-- High Scoring Team Slider: Minimum Goals For -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Minimum GF (Goals For)</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minGF }}</span>
+    <span class="text-gray-400">(e.g., 50)</span>
+  </div>
   <input
-    type="checkbox"
-    v-model="highScoringTeam"
-    id="highScoringTeam"
-    class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    v-model.number="minGF"
+    class="w-full accent-green-500 transition-all"
   />
-  <label for="highScoringTeam" class="text-sm text-gray-700">
-    ⚽ Teams with GF &gt; 50
-  </label>
 </div>
+
+<!-- Win Difference Filter -->
+<!-- Win Difference Slider -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🏆 Min Win Gap</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ winGapMin }}</span>
+    <span class="text-gray-400">Difference in Wins</span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="50"
+    step="1"
+    v-model.number="winGapMin"
+    class="w-full accent-purple-500"
+  />
+</div>
+
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -1104,9 +1161,13 @@
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
 const haScoreFilter = ref('all'); // Options: all, 60+, 75+
-const onlyGPAbove10 = ref(false);
-const negativeGDBelow30 = ref(false);
-const highScoringTeam = ref(false);
+const minGP = ref(0);          // Default: Matches with both teams playing more than 10 games.
+const maxNegativeGD = ref(0);   // Default: Matches where either team has GD less than -30.
+const minGF = ref(0);            // Default: Matches where either team scores more than 50 goals.
+const timeRangeStart = ref('');
+const timeRangeEnd = ref('');
+
+const winGapMin = ref(0); // default value can be 0 (show all)
 
 // State
 const matches = ref([]);
@@ -1518,10 +1579,50 @@ const averageConfidence = computed(() => {
 const filteredMatches = computed(() => {
     let result = [...matches.value];
 
-    if (highScoringTeam.value) {
-  result = result.filter((match) =>
-    match.home_gf > 50 || match.away_gf > 50
-  );
+
+
+    if (timeRangeStart.value && timeRangeEnd.value) {
+  const [startHour, startMinute] = timeRangeStart.value.split(':').map(Number);
+  const [endHour, endMinute] = timeRangeEnd.value.split(':').map(Number);
+
+  const startTotal = startHour * 60 + startMinute;
+  const endTotal = endHour * 60 + endMinute;
+
+  result = result.filter((match) => {
+    const timePart = match.time_str?.split(' ')[1]; // extract "14:30" from "2025-04-12 14:30"
+    if (!timePart) return false;
+
+    const [matchHour, matchMinute] = timePart.split(':').map(Number);
+    const matchTotal = matchHour * 60 + matchMinute;
+
+    return matchTotal >= startTotal && matchTotal <= endTotal;
+  });
+}
+
+
+// Filter by High Scoring Team: Only include matches where at least one team has scored more goals than the selected value.
+if (minGF.value) {
+  result = result.filter((match) => {
+    return parseInt(match.home_gf || 0) > minGF.value || parseInt(match.away_gf || 0) > minGF.value;
+  });
+}
+if (minGP.value) {
+  result = result.filter((match) => {
+    return parseInt(match.home_gp || 0) > minGP.value && parseInt(match.away_gp || 0) > minGP.value;
+  });
+}
+// Filter by Negative GD: Only include matches where at least one team has a goal difference below the selected maximum.
+if (maxNegativeGD.value < 0) {
+  result = result.filter((match) => {
+    return parseInt(match.home_gd || 0) < maxNegativeGD.value || parseInt(match.away_gd || 0) < maxNegativeGD.value;
+  });
+}
+if (winGapMin.value > 0) {
+  result = result.filter((match) => {
+    const homeW = parseInt(match.home_w || 0);
+    const awayW = parseInt(match.away_w || 0);
+    return Math.abs(homeW - awayW) >= winGapMin.value;
+  });
 }
 
     //h/a filter
@@ -1545,11 +1646,7 @@ const filteredMatches = computed(() => {
     }
   });
 }
-if (negativeGDBelow30.value) {
-  result = result.filter((match) =>
-    match.home_gd < -30 || match.away_gd < -30
-  );
-}
+
 
     // Filter by odds
     if (onlyWithOdds.value) {
@@ -1610,11 +1707,7 @@ if (pickFilter.value) {
             return true; // If filter is "all", return all
         });
     }
-    if (onlyGPAbove10.value) {
-  result = result.filter((match) => {
-    return (parseInt(match.home_gp || 0) > 10 && parseInt(match.away_gp || 0) > 10);
-  });
-}
+
 
 
 if (showNotStarted.value) {
@@ -1896,6 +1989,12 @@ const resetFilters = () => {
   pickFilter.value = '';
   onlyWithOdds.value = false;
   onlyWithStats.value = false;
+  minGP.value = 0;
+  maxNegativeGD.value = 0;
+  minGF.value = 0;
+  timeRangeStart.value = '';
+    timeRangeEnd.value = '';
+
 };
 
 
