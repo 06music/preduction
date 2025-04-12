@@ -359,7 +359,39 @@
   </select>
 </div>
 
+<!-- GP Filter -->
+<div class="flex items-center gap-2">
+  <input
+    type="checkbox"
+    v-model="onlyGPAbove10"
+    id="onlyGPAbove10"
+    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+  />
+  <label for="onlyGPAbove10" class="text-sm text-gray-700">📈 GP > 10 (Both Teams)</label>
+</div>
 
+<div class="flex items-center gap-2">
+  <input
+    type="checkbox"
+    v-model="negativeGDBelow30"
+    id="negativeGDBelow30"
+    class="rounded border-gray-300 text-red-600 focus:ring-red-500"
+  />
+  <label for="negativeGDBelow30" class="text-sm text-gray-700">
+    📉 Show matches with GD &lt; -30
+  </label>
+</div>
+<div class="flex items-center gap-2">
+  <input
+    type="checkbox"
+    v-model="highScoringTeam"
+    id="highScoringTeam"
+    class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+  />
+  <label for="highScoringTeam" class="text-sm text-gray-700">
+    ⚽ Teams with GF &gt; 50
+  </label>
+</div>
 
         <!-- Smart Insights (Tag Filter Buttons) -->
         <div>
@@ -1072,6 +1104,9 @@
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
 const haScoreFilter = ref('all'); // Options: all, 60+, 75+
+const onlyGPAbove10 = ref(false);
+const negativeGDBelow30 = ref(false);
+const highScoringTeam = ref(false);
 
 // State
 const matches = ref([]);
@@ -1414,11 +1449,9 @@ const mustWatchMatches = computed(() =>
             // Must meet one of these 3:
             return (
                 // 1. 🔥 Big Rank Clash (like 1st vs 2nd or 3rd)
-                (home <= 3 && away <= 3) ||
+                (home <= 3 && away > 10) ||
                 // 2. 😮 Potential Upset (top team vs rank >10)
-                (((home <= 3 && away >= 10) || (away <= 3 && home >= 10)) && highestProb < 70) ||
-                // 3. 🎯 High Scoring Drama
-                (goalSum > 60 && rankDiff <= 5)
+                (((home <= 3 && away >= 10) || (away <= 3 && home >= 10)) && highestProb < 70)
             );
         })
         // Rank by confidence *and* tightness of match
@@ -1427,7 +1460,7 @@ const mustWatchMatches = computed(() =>
             const bScore = getHighestProbability(b) - Math.abs(b.home_rank - b.away_rank);
             return bScore - aScore;
         })
-        .slice(0, 10),
+        .slice(0, 8),
 );
 const resetComboBuilder = () => {
   comboStartDate.value = '';
@@ -1485,6 +1518,11 @@ const averageConfidence = computed(() => {
 const filteredMatches = computed(() => {
     let result = [...matches.value];
 
+    if (highScoringTeam.value) {
+  result = result.filter((match) =>
+    match.home_gf > 50 || match.away_gf > 50
+  );
+}
 
     //h/a filter
     if (haScoreFilter.value !== 'all') {
@@ -1506,6 +1544,11 @@ const filteredMatches = computed(() => {
         return true;
     }
   });
+}
+if (negativeGDBelow30.value) {
+  result = result.filter((match) =>
+    match.home_gd < -30 || match.away_gd < -30
+  );
 }
 
     // Filter by odds
@@ -1567,38 +1610,45 @@ if (pickFilter.value) {
             return true; // If filter is "all", return all
         });
     }
+    if (onlyGPAbove10.value) {
+  result = result.filter((match) => {
+    return (parseInt(match.home_gp || 0) > 10 && parseInt(match.away_gp || 0) > 10);
+  });
+}
 
 
-    // Filter for matches that have not started yet
-    if (showNotStarted.value) {
-        const now = new Date(); // Get the current date and time
+if (showNotStarted.value) {
+  const now = new Date();
 
-        result = result.filter((match) => {
-            // Parse match.time_str (DD/MM/YYYY HH:MM) to a Date object
-            const [day, month, yearAndTime] = match.time_str.split('/'); // Split the day, month, year+time
-            const [year, time] = yearAndTime.split(' '); // Split the year and time
-            const [hour, minute] = time.split(':'); // Split the time into hour and minute
+  // 1. Filter only future matches
+  result = result.filter((match) => {
+    if (!match.time_str) return false;
 
-            // Create a new Date object using the parsed parts
-            const matchDate = new Date(`${month}/${day}/${year} ${hour}:${minute}`);
+    const [day, month, rest] = match.time_str.split('/');
+    if (!rest) return false;
 
-            return matchDate > now; // Only include matches that are in the future
-        });
-        result.sort((a, b) => {
-  const [dayA, monthA, yearAndTimeA] = a.time_str.split('/');
-  const [yearA, timeA] = yearAndTimeA.split(' ');
-  const [hourA, minuteA] = timeA.split(':');
-  const dateA = new Date(`${monthA}/${dayA}/${yearA} ${hourA}:${minuteA}`);
+    const [year, time] = rest.split(' ');
+    if (!time) return false;
 
-  const [dayB, monthB, yearAndTimeB] = b.time_str.split('/');
-  const [yearB, timeB] = yearAndTimeB.split(' ');
-  const [hourB, minuteB] = timeB.split(':');
-  const dateB = new Date(`${monthB}/${dayB}/${yearB} ${hourB}:${minuteB}`);
+    const [hour, minute] = time.split(':');
+    const matchDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
 
-  return dateA - dateB;
-});
+    return matchDate > now;
+  });
 
-    }
+  // 2. Sort future matches by upcoming time
+  result.sort((a, b) => {
+    const toDate = (m) => {
+      const [d, mo, r] = m.time_str.split('/');
+      const [y, t] = r.split(' ');
+      const [h, min] = t.split(':');
+      return new Date(`${y}-${mo}-${d}T${h}:${min}:00`);
+    };
+    return toDate(a) - toDate(b); // Ascending order
+  });
+}
+
+
     // Time of Day filter
     if (timeFilter.value) {
         result = result.filter((match) => {
@@ -1936,7 +1986,7 @@ if (match.time_str) {
   }
 
   // 9. 🎯 Over 2.5 Goals potential
-  if (totalGF + totalGA > 80 || (hGF > 45 && aGF > 45)) {
+  if (totalGF + totalGA > 70 || (hGF > 30 && aGF > 30)) {
     tags.push('🎯 Over 2.5 Goals');
   }
 
