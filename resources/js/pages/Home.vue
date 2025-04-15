@@ -331,6 +331,23 @@
   </div>
 </div>
 
+<!-- League Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🌍 League</label>
+  <select
+    v-model="leagueFilter"
+    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
+  >
+    <option value="">All Leagues</option>
+    <option
+      v-for="league in uniqueLeagues"
+      :key="league"
+      :value="league"
+    >
+      {{ league }}
+    </option>
+  </select>
+</div>
 
 
         <!-- Min Confidence -->
@@ -673,59 +690,96 @@
                         <!-- Match List -->
                         <div class="divide-y divide-gray-100">
                             <div
-                                v-for="match in showAllMustWatch ? mustWatchMatches : mustWatchMatches.slice(0, 4)"
-                                :key="match.id"
-                                class="grid grid-cols-1 items-center gap-4 px-6 py-3 transition hover:bg-gray-50 sm:grid-cols-12"
-                            >
-                                <!-- Time -->
-                                <div class="col-span-2 text-xs font-medium text-gray-500 sm:text-sm">🕒 {{ match.time_str }}</div>
+                            v-for="match in mustWatchMatches.slice(0, mustWatchLimit)"
+                            :key="match.id"
+  class="grid grid-cols-1 gap-4 px-6 py-5 sm:grid-cols-12 bg-white border-b border-gray-100 hover:bg-gray-50 transition"
+>
+  <!-- Left Time + Date -->
+  <div class="col-span-2 text-xs text-gray-500">
+    <div class="font-medium text-gray-700">🗓 {{ match.time_str.split(' ')[0] }}</div>
+    <div>⏰ {{ match.time_str.split(' ')[1] }}</div>
+  </div>
 
-                                <!-- Teams -->
-                                <div class="col-span-6 flex flex-col text-sm font-semibold text-gray-800 sm:flex-row sm:items-center sm:gap-2">
-                                    <span
-                                        >{{ match.home_team }}
-                                        <span v-if="match.home_rank" class="text-xs font-normal text-gray-400">(#{{ match.home_rank }})</span></span
-                                    >
-                                    <span class="hidden font-normal text-gray-500 sm:inline">vs</span>
-                                    <span
-                                        >{{ match.away_team }}
-                                        <span v-if="match.away_rank" class="text-xs font-normal text-gray-400">(#{{ match.away_rank }})</span></span
-                                    >
-                                </div>
+  <!-- Teams + Stats -->
+  <div class="col-span-6 space-y-2">
+    <!-- Match Teams -->
+    <div class="text-sm font-semibold text-gray-800">
+      {{ match.home_team }}
+      <span v-if="match.home_rank" class="text-xs text-gray-400"> (#{{ match.home_rank }}) </span>
+      <span class="text-gray-500">vs</span>
+      {{ match.away_team }}
+      <span v-if="match.away_rank" class="text-xs text-gray-400"> (#{{ match.away_rank }}) </span>
+    </div>
 
-                                <!-- Prediction -->
-                                <div class="col-span-2 text-sm font-medium text-gray-700">
-                                    🧠
-                                    {{
-                                        match.prediction === '1'
-                                            ? 'Home Win'
-                                            : match.prediction === 'X'
-                                              ? 'Draw'
-                                              : match.prediction === '2'
-                                                ? 'Away Win'
-                                                : 'Unknown'
-                                    }}
-                                </div>
+    <!-- Home Stats -->
+    <div class="bg-green-50 text-xs rounded-md px-3 py-2 text-green-700">
+      <strong class="block mb-1">🏠 Home Stats</strong>
+      GP: {{ match.home_gp }} • W: {{ match.home_w }} • D: {{ match.home_d }} • L: {{ match.home_l }}<br />
+      GF: {{ match.home_gf }} • GA: {{ match.home_ga }} • GD: {{ match.home_gd }} • Pts: {{ match.home_pts }}
+    </div>
 
-                                <!-- Hot Pick + View -->
-                                <div class="col-span-2 flex items-center justify-between gap-2 sm:justify-end">
-                                    <span
-                                        v-if="getHighestProbability(match) > 60"
-                                        class="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800"
-                                    >
-                                        🔥 Hot Pick
-                                    </span>
-                                    <a :href="match.match_url" target="_blank" class="text-sm text-blue-600 hover:underline"> 👀 View </a>
-                                </div>
-                            </div>
+    <!-- Away Stats -->
+    <div class="bg-blue-50 text-xs rounded-md px-3 py-2 text-blue-700">
+      <strong class="block mb-1">🚗 Away Stats</strong>
+      GP: {{ match.away_gp }} • W: {{ match.away_w }} • D: {{ match.away_d }} • L: {{ match.away_l }}<br />
+      GF: {{ match.away_gf }} • GA: {{ match.away_ga }} • GD: {{ match.away_gd }} • Pts: {{ match.away_pts }}
+    </div>
+
+    <!-- Odds Section -->
+    <div class="bg-gray-50 text-xs rounded-md px-3 py-1.5 text-gray-700 flex flex-wrap gap-3 items-center">
+      <strong class="text-gray-800">💸 Odds</strong>
+      <span v-if="match.live_odds">Live: <strong class="text-indigo-700">{{ match.live_odds }}</strong></span>
+    </div>
+  </div>
+
+  <!-- Prediction -->
+  <div class="col-span-2 flex items-center justify-center text-sm font-medium text-gray-700">
+    🧠
+    {{
+      match.prediction === '1'
+        ? 'Home Win'
+        : match.prediction === 'X'
+        ? 'Draw'
+        : match.prediction === '2'
+        ? 'Away Win'
+        : 'Unknown'
+    }}
+  </div>
+
+  <!-- Action -->
+  <div class="col-span-2 flex flex-col items-end justify-center space-y-1">
+    <span
+      v-if="getHighestProbability(match) > 60"
+      class="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800"
+    >
+      🔥 Hot Pick
+    </span>
+    <a :href="match.match_url" target="_blank" class="text-sm text-blue-600 hover:underline">👀 View</a>
+  </div>
+</div>
+
                         </div>
 
-                        <!-- See More Button -->
-                        <div class="border-t border-gray-100 py-4 text-center">
-                            <button @click="showAllMustWatch = !showAllMustWatch" class="text-sm font-medium text-yellow-700 hover:underline">
-                                {{ showAllMustWatch ? '🔽 Show Less' : '🔼 See More' }}
-                            </button>
-                        </div>
+                      <!-- See More Button -->
+<div class="border-t border-gray-100 py-4 text-center" v-if="mustWatchMatches.length > mustWatchLimit">
+  <button
+    @click="mustWatchLimit += 10"
+    class="text-sm font-medium text-yellow-700 hover:underline"
+  >
+    🔼 Show More ({{ mustWatchLimit }}/{{ mustWatchMatches.length }})
+  </button>
+</div>
+
+<!-- Optional "Show Less" -->
+<div v-else-if="mustWatchMatches.length > 10" class="text-center pb-6">
+  <button
+    @click="mustWatchLimit = 10"
+    class="text-sm text-gray-500 hover:underline"
+  >
+    🔽 Show Less
+  </button>
+</div>
+
                     </div>
 
                     <div ref="adContainer"></div>
@@ -981,7 +1035,11 @@
                                     <div class="mb-4 flex items-start justify-between">
                                         <div>
                                             <h3 class="text-lg font-bold text-gray-800">{{ match.home_team }} vs {{ match.away_team }}</h3>
-                                            <p class="mt-1 text-sm text-gray-500">{{ match.time_str }}</p>
+<p class="mt-1 text-sm text-gray-500">{{ match.time_str }}</p>
+<p v-if="match.league" class="text-xs mt-1 font-medium text-indigo-600">
+  🏆 <a :href="match.match_url" class="hover:underline">{{ match.league }}</a>
+</p>
+
                                         </div>
                                         <span
                                             class="rounded-full px-3 py-1 text-xs font-bold"
@@ -1175,6 +1233,8 @@ const loading = ref(true);
 const error = ref(null);
 const showFilters = ref(false);
 const showAllMustWatch = ref(false);
+const mustWatchLimit = ref(10);
+
 const tableView = ref(false);
 const currentPage = ref(1);
 const rowsPerPage = 50;
@@ -1497,32 +1557,25 @@ const pickFilter = ref('');
 const sampleMatches = [
 
 ];
-
 const mustWatchMatches = computed(() =>
-    filteredMatches.value
-        .filter((m) => {
-            const home = Number(m.home_rank);
-            const away = Number(m.away_rank);
-            const highestProb = getHighestProbability(m);
-            const goalSum = (m.home_gf || 0) + (m.away_gf || 0);
-            const rankDiff = Math.abs(home - away);
+  filteredMatches.value
+    .filter((m) => {
+      const home = Number(m.home_rank || 999);
+      const away = Number(m.away_rank || 999);
 
-            // Must meet one of these 3:
-            return (
-                // 1. 🔥 Big Rank Clash (like 1st vs 2nd or 3rd)
-                (home <= 3 && away > 10) ||
-                // 2. 😮 Potential Upset (top team vs rank >10)
-                (((home <= 3 && away >= 10) || (away <= 3 && home >= 10)) && highestProb < 70)
-            );
-        })
-        // Rank by confidence *and* tightness of match
-        .sort((a, b) => {
-            const aScore = getHighestProbability(a) - Math.abs(a.home_rank - a.away_rank);
-            const bScore = getHighestProbability(b) - Math.abs(b.home_rank - b.away_rank);
-            return bScore - aScore;
-        })
-        .slice(0, 8),
+      // 🎯 Match où une équipe du top 3 affronte une équipe classée après la 8e place
+      return (
+        (home <= 3 && away > 8) || (away <= 3 && home > 8)
+      );
+    })
+    .sort((a, b) => {
+      const aScore = getHighestProbability(a) - Math.abs(a.home_rank - a.away_rank);
+      const bScore = getHighestProbability(b) - Math.abs(b.home_rank - b.away_rank);
+      return bScore - aScore;
+    })
+    .slice(0, 9999)
 );
+
 const resetComboBuilder = () => {
   comboStartDate.value = '';
   comboEndDate.value = '';
@@ -1574,6 +1627,11 @@ const averageConfidence = computed(() => {
 
     return Math.round(total / filteredMatches.value.length);
 });
+const uniqueLeagues = computed(() => {
+  const allLeagues = filteredMatches.value.map((m) => m.league).filter(Boolean);
+  return [...new Set(allLeagues)].sort((a, b) => a.localeCompare(b));
+});
+
 
 // Computed: Filtered Matches
 const filteredMatches = computed(() => {
@@ -2107,7 +2165,7 @@ const fetchData = async () => {
         const res = await axios.get('/forebet-data');
         matches.value = res.data.map((match) => ({
             ...match,
-            league: match.game.split(' - ')[0] || match.league,
+            league: match.league, // ✅ Use the value directly from backend
         }));
     } catch (e) {
         console.error('Error loading predictions', e);
