@@ -98,33 +98,39 @@
 <!-- Combo Builder Modal -->
 <div
   v-if="showComboModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm px-4"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900/80 to-blue-900/80 backdrop-blur-md px-4 transition-opacity duration-300"
+  @click="showComboModal = false"
 >
   <div
-    class="animate-fade-in-up relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl
-           overflow-y-auto max-h-[90vh]"
+    class="relative w-full max-w-3xl rounded-2xl bg-white/95 dark:bg-gray-800/95 p-8 shadow-xl backdrop-blur-lg
+           overflow-y-auto max-h-[92vh] animate-slide-in-up"
+    @click.stop
   >
     <!-- Close Button -->
     <button
       @click="showComboModal = false"
-      class="absolute right-3 top-3 text-xl font-bold text-gray-500 hover:text-red-500"
+      class="absolute right-4 top-4 text-2xl font-semibold text-gray-400 hover:text-red-500 transition-colors"
+      aria-label="Close modal"
     >
-      ×
+      &times;
     </button>
 
     <!-- Title -->
-    <h2 class="mb-4 text-xl font-bold text-gray-800 flex items-center gap-2">
-      ⚙️ Smart Combo Generator
+    <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+      <span class="text-blue-500">⚙️</span> Smart Combo Generator
     </h2>
 
     <!-- Controls -->
-    <div class="mb-4 space-y-4">
+    <div class="space-y-6">
       <!-- Strategy Selector -->
-      <div>
-        <label class="block text-sm font-medium">Combo Type</label>
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Combo Type
+          <span class="ml-1 text-xs text-gray-400" v-tooltip="'Select a strategy to generate your combo'">ℹ️</span>
+        </label>
         <select
           v-model="comboStrategy"
-          class="w-full rounded-lg border p-2 text-sm"
+          class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition"
         >
           <option value="best">📊 Top Confidence (1/X/2)</option>
           <option value="goals">⚽ Goal Fest (BTTS / Over)</option>
@@ -143,103 +149,169 @@
       </div>
 
       <!-- Date Range -->
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium">Start Date</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Start Date</label>
           <input
             type="date"
             v-model="comboStartDate"
-            class="w-full rounded-lg border p-2 text-sm"
+            class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+            :class="{ 'border-red-500': dateError }"
+            @input="validateDates"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium">End Date</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">End Date</label>
           <input
             type="date"
             v-model="comboEndDate"
-            class="w-full rounded-lg border p-2 text-sm"
+            class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+            :class="{ 'border-red-500': dateError }"
+            @input="validateDates"
           />
         </div>
+        <p v-if="dateError" class="text-xs text-red-500 col-span-2">{{ dateError }}</p>
       </div>
+<!-- Min Avg Goals -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+    Minimum Avg Goals
+    <span class="ml-1 text-xs text-gray-400" v-tooltip="'Only show matches with at least this average goals'">ℹ️</span>
+  </label>
+  <input
+    type="number"
+    min="0"
+    step="0.1"
+    v-model="minAvgGoals"
+    placeholder="e.g., 2.5"
+    class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+<!-- Min Confidence -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+    Minimum Confidence %
+    <span class="ml-1 text-xs text-gray-400" v-tooltip="'Only show matches with at least this confidence'">ℹ️</span>
+  </label>
+  <input
+    type="number"
+    min="0"
+    max="100"
+    step="1"
+    v-model="minConfidence"
+    placeholder="e.g., 70"
+    class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+  />
+</div>
 
       <!-- Match Count -->
       <div>
-        <label class="block text-sm font-medium">Number of Matches</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Number of Matches
+          <span class="ml-1 text-xs text-gray-400" v-tooltip="'Choose 2-10 matches for your combo'">ℹ️</span>
+        </label>
         <input
           type="number"
           min="2"
           max="10"
           v-model="comboMatchCount"
-          class="w-full rounded-lg border p-2 text-sm"
+          class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+          :class="{ 'border-red-500': matchCountError }"
+          @input="validateMatchCount"
         />
+        <p v-if="matchCountError" class="text-xs text-red-500">{{ matchCountError }}</p>
       </div>
 
       <!-- Actions -->
-      <button
-        @click="generateUserCombo"
-        class="mt-2 w-full rounded-lg bg-blue-600 py-2 text-white transition hover:bg-blue-700"
-      >
-        🚀 Generate Combo
-      </button>
-      <button
-        @click="resetComboBuilder"
-        class="w-full rounded-lg border border-gray-300 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        🔄 Reset
-      </button>
+      <div class="flex gap-4">
+        <button
+  @click="generateUserCombo"
+
+  class="flex-1 rounded-xl bg-blue-600 py-3 text-white font-medium transition hover:bg-blue-700 disabled:opacity-50"
+>
+  <span v-if="isGenerating" class="flex items-center justify-center gap-2">
+    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+    </svg>
+    Generating...
+  </span>
+  <span v-else>🚀 Generate Combo</span>
+</button>
+
+        <button
+          @click="resetComboBuilder"
+          class="flex-1 rounded-xl border border-gray-300 dark:border-gray-600 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          🔄 Reset
+        </button>
+      </div>
     </div>
 
     <!-- Results -->
-    <div v-if="userSmartCombo.length" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h3 class="mb-4 text-base font-semibold text-gray-800 flex items-center gap-2">
-        💡 Suggested Picks <span class="text-xs text-gray-400">({{ userSmartCombo.length }} matches)</span>
-      </h3>
+    <div v-if="userSmartCombo.length" class="mt-8 rounded-xl border border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50 p-6 shadow-sm">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+          💡 Suggested Picks
+          <span class="text-xs text-gray-400">({{ userSmartCombo.length }} matches)</span>
+
+        </h3>
+        <button
+          @click="copyCombo"
+          class="text-sm text-blue-600 hover:underline flex items-center gap-1"
+          v-tooltip="'Copy combo to clipboard'"
+        >
+          📋 Copy
+        </button>
+      </div>
 
       <ul class="space-y-4">
         <li
-          v-for="match in userSmartCombo"
-          :key="match.id"
-          class="border-b pb-4 last:border-none"
+        v-for="match in filteredCombo"
+        :key="match.id"
+          class="border-b border-gray-200 dark:border-gray-600 pb-4 last:border-none animate-fade-in"
         >
-          <!-- Date + Link -->
-          <div class="flex justify-between items-center text-sm text-gray-600">
-            <div>🗓 {{ new Date(match.iso_time).toLocaleDateString() }}</div>
-            <a
-              :href="match.match_url"
-              target="_blank"
-              class="text-blue-600 hover:underline font-medium"
-            >
-              View Match →
-            </a>
+          <!-- Collapsible Match Card -->
+          <div
+            class="flex justify-between items-center cursor-pointer"
+            @click="toggleMatchDetails(match.id)"
+          >
+            <div class="text-sm text-gray-600 dark:text-gray-300">
+              🗓 {{ new Date(match.iso_time).toLocaleDateString() }}
+            </div>
+            <div class="text-sm font-medium text-blue-600 hover:underline">
+              <a :href="match.match_url" target="_blank">View Match →</a>
+            </div>
           </div>
 
           <!-- Teams + Tip -->
-          <div class="mt-1 text-sm font-medium text-gray-800">
+          <div class="mt-2 text-sm font-medium text-gray-800 dark:text-white">
             👀 {{ match.home_team }} ({{ match.home_rank || '-' }}) vs {{ match.away_team }} ({{ match.away_rank || '-' }})
           </div>
           <div class="mt-1 text-sm">
             🎯 Suggested Tip:
             <strong class="text-indigo-600">{{ match.tip }}</strong>
+
+            <span class="ml-2 text-xs text-gray-400" :class="getConfidenceColor(match)">({{ getConfidence(match) }}%)</span>
           </div>
 
-          <!-- Tip Reason -->
-          <div class="mt-1 text-xs italic text-gray-500">
-            💬 {{ getTipReason(match, comboStrategy) }}
+          <!-- Collapsible Details -->
+          <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-2 animate-fade-in">
+            <div class="italic">
+              💬 {{ getTipReason(match, comboStrategy) }}
+            </div>
+            <div>
+              📊 Avg Goals/Game:
+              <strong>{{ getAvgGoals(match) }}</strong>
+              <span v-if="getAvgGoals(match) >= 2.8" class="ml-2 text-green-500 font-semibold">
+                🟢 High Scoring Alert
+              </span>
+              <span v-else-if="getAvgGoals(match) <= 2.2" class="ml-2 text-red-500 font-semibold">
+                🔴 Low Scoring Trend
+              </span>
+            </div>
           </div>
-
-          <!-- Avg Goals -->
-          <div class="mt-2 text-xs text-gray-700">
-            📊 Avg Goals/Game:
-            <strong>{{ getAvgGoals(match) }}</strong>
-            <span v-if="getAvgGoals(match) >= 2.8" class="ml-2 text-green-600 font-semibold">
-              🟢 High Scoring Alert
-            </span>
-            <span v-else-if="getAvgGoals(match) <= 2.2" class="ml-2 text-red-500 font-semibold">
-              🔴 Low Scoring Trend
-            </span>
-          </div>
-
-
         </li>
       </ul>
     </div>
@@ -1224,6 +1296,8 @@ const maxNegativeGD = ref(0);   // Default: Matches where either team has GD les
 const minGF = ref(0);            // Default: Matches where either team scores more than 50 goals.
 const timeRangeStart = ref('');
 const timeRangeEnd = ref('');
+const minAvgGoals = ref(0); // Default: 0, means no filter
+const minConfidence = ref(0); // Default: 0, means no filter
 
 const winGapMin = ref(0); // default value can be 0 (show all)
 
@@ -1249,6 +1323,11 @@ const comboStartDate = ref('');
 const comboEndDate = ref('');
 const comboMatchCount = ref(5);
 const userSmartCombo = ref([]);
+const isGenerating = ref(false);
+const dateError = ref('');
+const matchCountError = ref('');
+const expandedMatches = ref({});
+
 const minOdds = ref('');
 const maxOdds = ref('');
 const matchTimeFrom = ref('');
@@ -1260,7 +1339,103 @@ const GD_WEIGHT = 0.1;    // Weight of goal difference
 const performanceScoreFilter = ref('all'); // Default to 'all'
 const showNotStarted = ref(false); // to toggle between showing all or not started matches
 
+const comboAvgGoals = computed(() => {
+  if (!userSmartCombo.value.length) return 0;
 
+  const total = userSmartCombo.value.reduce((sum, match) => sum + getAvgGoals(match), 0);
+  return (total / userSmartCombo.value.length).toFixed(2);
+});
+const filteredCombo = computed(() => {
+  if (!userSmartCombo.value.length) return [];
+
+  return userSmartCombo.value.filter(match => {
+    const avgGoals = getAvgGoals(match);
+    const confidence = getConfidence(match);
+
+    // If minAvgGoals and minConfidence not set (still 0), allow all
+    const goalsOk = minAvgGoals.value ? avgGoals >= minAvgGoals.value : true;
+    const confidenceOk = minConfidence.value ? confidence >= minConfidence.value : true;
+
+    return goalsOk && confidenceOk;
+  });
+});
+
+
+const toggleMatchDetails = (matchId) => {
+  expandedMatches.value = {
+    ...expandedMatches.value,
+    [matchId]: !expandedMatches.value[matchId]
+  };
+};
+
+// Combo builder date validation
+const validateDates = () => {
+  if (!comboStartDate.value || !comboEndDate.value) {
+    dateError.value = '';
+    return;
+  }
+
+  const start = new Date(comboStartDate.value);
+  const end = new Date(comboEndDate.value);
+
+  if (end < start) {
+    dateError.value = 'End date must be after start date';
+  } else {
+    dateError.value = '';
+  }
+};
+
+// Match count validation
+const validateMatchCount = () => {
+  const count = parseInt(comboMatchCount.value);
+  if (isNaN(count) || count < 2) {
+    matchCountError.value = 'Please select at least 2 matches';
+  } else if (count > 99999) {
+    matchCountError.value = 'Maximum 99999 matches allowed';
+  } else {
+    matchCountError.value = '';
+  }
+};
+
+// Function to get confidence color
+const getConfidenceColor = (match) => {
+  const confidence = getConfidence(match);
+  if (confidence >= 75) return 'text-green-600';
+  if (confidence >= 60) return 'text-blue-600';
+  return 'text-gray-500';
+};
+
+// Function to get confidence percentage
+const getConfidence = (match) => {
+  const highestProb = getHighestProbability(match);
+  return Math.round(highestProb);
+};
+
+// Copy combo to clipboard
+const copyCombo = async () => {
+  try {
+    const comboText = userSmartCombo.value.map(match => {
+      return `${match.home_team} vs ${match.away_team} - ${match.tip} (${getConfidence(match)}%)`;
+    }).join('\n');
+
+    await navigator.clipboard.writeText(comboText);
+    alert('Combo copied to clipboard!');
+  } catch (err) {
+    console.error('Failed to copy combo:', err);
+    alert('Failed to copy. Please try manually selecting and copying the text.');
+  }
+};
+// Open the combo builder modal
+const openComboBuilder = () => {
+  // Pre-fill with current date range if empty
+  if (!comboStartDate.value) {
+    const today = new Date().toISOString().split('T')[0];
+    comboStartDate.value = today;
+    comboEndDate.value = today;
+  }
+
+  showComboModal.value = true;
+};
 // Function to calculate Home Win Rate
 function getHomeWinRate(match) {
   if (!match.home_gp) return 0; // Prevent division by 0
@@ -1301,10 +1476,28 @@ function calculateHomeAdvantageScore(homeStats, awayStats) {
 
 
 
-const generateUserCombo = () => {
-  const start = comboStartDate.value ? new Date(comboStartDate.value) : null;
+const generateUserCombo = async () => {
+    isGenerating.value = true;
+
+    const start = comboStartDate.value ? new Date(comboStartDate.value) : null;
   const end = comboEndDate.value ? new Date(comboEndDate.value) : null;
 
+  // Helper functions for metrics
+  const hGF = (m) => m.home_gf || 0; // Home goals for
+  const aGF = (m) => m.away_gf || 0; // Away goals for
+  const hGA = (m) => m.home_ga || 0; // Home goals against
+  const aGA = (m) => m.away_ga || 0; // Away goals against
+  const rankGap = (m) => Math.abs((m.home_rank || 0) - (m.away_rank || 0));
+  const prob = (m) => getHighestProbability(m); // Highest win/draw probability
+  const prediction = (m) => getPredictionType(m); // 1/X/2 or other prediction
+  const totalGF = (m) => hGF(m) + aGF(m); // Total goals scored
+  const totalGA = (m) => hGA(m) + aGA(m); // Total goals conceded
+  const avgGoalsPerGame = (m) => {
+    const matches = m.matches_played || 1; // Avoid division by zero
+    return ((hGF(m) + aGF(m) + hGA(m) + aGA(m)) / (2 * matches)).toFixed(2); // Avg goals per game
+  };
+
+  // Base filter by date range
   let filtered = [...filteredMatches.value].filter((m) => {
     const matchDate = new Date(m.iso_time);
     if (start && matchDate < start) return false;
@@ -1312,142 +1505,137 @@ const generateUserCombo = () => {
     return true;
   });
 
-  const hGF = (m) => m.home_gf || 0;
-  const aGF = (m) => m.away_gf || 0;
-  const hGA = (m) => m.home_ga || 0;
-  const aGA = (m) => m.away_ga || 0;
-  const rankGap = (m) => Math.abs((m.home_rank || 0) - (m.away_rank || 0));
-  const prob = (m) => getHighestProbability(m);
-  const totalGF = (m) => hGF(m) + aGF(m);
-  const prediction = (m) => getPredictionType(m);
-
+  // Strategy-specific filtering
   switch (comboStrategy.value) {
     case 'smart_over':
       filtered = filtered
-        .filter((m) => totalGF(m) > 50 || (hGF(m) > 30 && aGF(m) > 20))
+        .filter((m) => avgGoalsPerGame(m) > 2.8 && (totalGF(m) > 50 || (hGF(m) > 30 && aGF(m) > 20)))
         .map((m) => {
           let tip = 'Over 2.5';
-          if (totalGF(m) > 70) tip = 'Over 3.5';
-          else if (totalGF(m) > 55) tip = 'Over 2.5';
+          if (avgGoalsPerGame(m) > 3.5) tip = 'Over 3.5';
+          else if (avgGoalsPerGame(m) > 3.0) tip = 'Over 2.5';
           else tip = 'Over 1.5';
           return { ...m, tip };
-        });
+        })
+        .sort((a, b) => avgGoalsPerGame(b) - avgGoalsPerGame(a)); // Sort by highest avg goals
       break;
 
     case 'smart_under':
       filtered = filtered
-        .filter((m) => totalGF(m) < 20 && hGF(m) < 15 && aGF(m) < 15)
+        .filter((m) => avgGoalsPerGame(m) < 2.2 && totalGF(m) < 20 && hGF(m) < 15 && aGF(m) < 15)
         .map((m) => ({
           ...m,
-          tip: totalGF(m) < 10 ? 'Under 1.5' : 'Under 2.5',
-        }));
+          tip: avgGoalsPerGame(m) < 1.5 ? 'Under 1.5' : 'Under 2.5',
+        }))
+        .sort((a, b) => avgGoalsPerGame(a) - avgGoalsPerGame(b)); // Sort by lowest avg goals
       break;
 
     case 'btts_focus':
       filtered = filtered
-        .filter((m) => hGF(m) > 25 && aGF(m) > 25 && hGA(m) > 20 && aGA(m) > 20)
-        .map((m) => ({ ...m, tip: 'BTTS' }));
+        .filter((m) => hGF(m) > 25 && aGF(m) > 25 && hGA(m) > 20 && aGA(m) > 20 && avgGoalsPerGame(m) > 2.5)
+        .map((m) => ({ ...m, tip: 'BTTS' }))
+        .sort((a, b) => (hGF(b) + aGF(b)) - (hGF(a) + aGF(a))); // Sort by scoring potential
       break;
 
     case 'draw_focus':
       filtered = filtered
-        .filter((m) => rankGap(m) <= 2 && Math.abs(m.prob_1 - m.prob_2) <= 10)
-        .map((m) => ({ ...m, tip: 'Draw' }));
+        .filter((m) => rankGap(m) <= 2 && Math.abs(m.prob_1 - m.prob_2) <= 10 && avgGoalsPerGame(m) < 2.5)
+        .map((m) => ({ ...m, tip: 'Draw' }))
+        .sort((a, b) => rankGap(a) - rankGap(b)); // Sort by closest rank gap
       break;
 
     case 'safe_combo':
       filtered = filtered
-        .filter((m) => prob(m) >= 70 && rankGap(m) >= 5)
+        .filter((m) => prob(m) >= 75 && rankGap(m) >= 5 && avgGoalsPerGame(m) > 2.0)
         .map((m) => ({
           ...m,
           tip: prediction(m) === 'Draw' ? 'Double Chance' : `${prediction(m)} - Safe`,
-        }));
+        }))
+        .sort((a, b) => prob(b) - prob(a)); // Sort by highest probability
       break;
 
     case 'home_over':
       filtered = filtered
-        .filter((m) => hGF(m) > 30 && aGA(m) > 25)
-        .map((m) => ({
-          ...m,
-          tip: 'Home Over 2.5',
-        }));
+        .filter((m) => hGF(m) > 30 && aGA(m) > 25 && avgGoalsPerGame(m) > 2.8)
+        .map((m) => ({ ...m, tip: 'Home Over 2.5' }))
+        .sort((a, b) => hGF(b) - hGF(a)); // Sort by home goals
       break;
 
     case 'away_over':
       filtered = filtered
-        .filter((m) => aGF(m) > 30 && hGA(m) > 25)
-        .map((m) => ({
-          ...m,
-          tip: 'Away Over 2.5',
-        }));
+        .filter((m) => aGF(m) > 30 && hGA(m) > 25 && avgGoalsPerGame(m) > 2.8)
+        .map((m) => ({ ...m, tip: 'Away Over 2.5' }))
+        .sort((a, b) => aGF(b) - aGF(a)); // Sort by away goals
       break;
 
     case 'home_under':
       filtered = filtered
-        .filter((m) => hGF(m) < 15 && aGA(m) < 15)
-        .map((m) => ({
-          ...m,
-          tip: 'Home Under 2.5',
-        }));
+        .filter((m) => hGF(m) < 15 && aGA(m) < 15 && avgGoalsPerGame(m) < 2.2)
+        .map((m) => ({ ...m, tip: 'Home Under 2.5' }))
+        .sort((a, b) => hGF(a) - hGF(b)); // Sort by lowest home goals
       break;
 
     case 'away_under':
       filtered = filtered
-        .filter((m) => aGF(m) < 15 && hGA(m) < 15)
-        .map((m) => ({
-          ...m,
-          tip: 'Away Under 2.5',
-        }));
+        .filter((m) => aGF(m) < 15 && hGA(m) < 15 && avgGoalsPerGame(m) < 2.2)
+        .map((m) => ({ ...m, tip: 'Away Under 2.5' }))
+        .sort((a, b) => aGF(a) - aGF(b)); // Sort by lowest away goals
       break;
 
     case 'mixed':
-      filtered = filtered.map((m, i) => {
-        const tags = getMatchTags(m);
-        let tip = prediction(m);
-        if (tags.includes('🎯 Over 2.5 Goals')) tip = 'Over 2.5';
-        if (tags.includes('🎯 Consistent Scorer')) tip = 'BTTS';
-        if (i % 3 === 0) tip = 'Over 1.5';
-        if (i % 4 === 0) tip = 'Draw';
-        return { ...m, tip };
-      });
+      filtered = filtered
+        .filter((m) => avgGoalsPerGame(m) > 2.0 || prob(m) > 60)
+        .map((m, i) => {
+          const tags = getMatchTags(m);
+          let tip = prediction(m);
+          if (tags.includes('🎯 Over 2.5 Goals') || avgGoalsPerGame(m) > 3.0) tip = 'Over 2.5';
+          else if (tags.includes('🎯 Consistent Scorer') && avgGoalsPerGame(m) > 2.5) tip = 'BTTS';
+          else if (i % 3 === 0) tip = 'Over 1.5';
+          else if (i % 4 === 0 && rankGap(m) < 3) tip = 'Draw';
+          return { ...m, tip };
+        })
+        .sort((a, b) => prob(b) - prob(a)); // Sort by probability
       break;
 
     case 'goals':
       filtered = filtered
-        .filter((m) => totalGF(m) > 60)
-        .map((m) => ({ ...m, tip: 'Over 2.5 Goals' }));
+        .filter((m) => totalGF(m) > 60 && avgGoalsPerGame(m) > 3.0)
+        .map((m) => ({ ...m, tip: 'Over 2.5 Goals' }))
+        .sort((a, b) => avgGoalsPerGame(b) - avgGoalsPerGame(a)); // Sort by highest avg goals
       break;
 
     case 'super_combo':
-      // Mix of Over, BTTS, 1X2, Safe
       filtered = filtered
-        .filter((m) => prob(m) > 60 || totalGF(m) > 50)
+        .filter((m) => prob(m) > 65 || totalGF(m) > 50 || avgGoalsPerGame(m) > 2.8)
         .map((m, i) => {
           const p = prediction(m);
-          if (i % 2 === 0 && totalGF(m) > 60) return { ...m, tip: 'Over 2.5' };
-          if (i % 3 === 0) return { ...m, tip: 'BTTS' };
-          if (i % 4 === 0) return { ...m, tip: 'Draw' };
-          if (prob(m) > 70 && rankGap(m) > 5) return { ...m, tip: `${p} - Safe` };
+          if (i % 2 === 0 && avgGoalsPerGame(m) > 3.0) return { ...m, tip: 'Over 2.5' };
+          if (i % 3 === 0 && hGF(m) > 25 && aGF(m) > 25) return { ...m, tip: 'BTTS' };
+          if (i % 4 === 0 && rankGap(m) < 3) return { ...m, tip: 'Draw' };
+          if (prob(m) > 75 && rankGap(m) > 5) return { ...m, tip: `${p} - Safe` };
           return { ...m, tip: p };
-        });
+        })
+        .sort((a, b) => prob(b) - prob(a)); // Sort by probability
       break;
 
     default:
-      // Fallback to "best"
+      // Best: High-confidence predictions
       filtered = filtered
-        .filter((m) => prob(m) > 60)
-        .sort((a, b) => prob(b) - prob(a))
-        .map((m) => ({
-          ...m,
-          tip: prediction(m),
-        }));
+        .filter((m) => prob(m) > 65 && avgGoalsPerGame(m) > 2.0)
+        .map((m) => ({ ...m, tip: prediction(m) }))
+        .sort((a, b) => prob(b) - prob(a)); // Sort by highest probability
       break;
   }
 
-  // If no results, fallback to top confidence
-  if (filtered.length === 0) {
+  // Dynamic fallback: Relax constraints if too few results
+  if (filtered.length < comboMatchCount.value) {
     filtered = [...filteredMatches.value]
-      .filter((m) => prob(m) > 60)
+      .filter((m) => {
+        const matchDate = new Date(m.iso_time);
+        if (start && matchDate < start) return false;
+        if (end && matchDate > end) return false;
+        return prob(m) > 55 || avgGoalsPerGame(m) > 2.5; // Relaxed thresholds
+      })
       .sort((a, b) => prob(b) - prob(a))
       .map((m) => ({
         ...m,
@@ -1455,7 +1643,10 @@ const generateUserCombo = () => {
       }));
   }
 
+  // Limit to requested number of matches
   userSmartCombo.value = filtered.slice(0, comboMatchCount.value);
+  isGenerating.value = false;
+
 };
 
 
@@ -2216,6 +2407,8 @@ onMounted(() => {
     }
 
 });
+
+
 </script>
 
 <style>
