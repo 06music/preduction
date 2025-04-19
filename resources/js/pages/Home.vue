@@ -149,29 +149,7 @@
       </div>
 
       <!-- Date Range -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Start Date</label>
-          <input
-            type="date"
-            v-model="comboStartDate"
-            class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-            :class="{ 'border-red-500': dateError }"
-            @input="validateDates"
-          />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">End Date</label>
-          <input
-            type="date"
-            v-model="comboEndDate"
-            class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-3 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-            :class="{ 'border-red-500': dateError }"
-            @input="validateDates"
-          />
-        </div>
-        <p v-if="dateError" class="text-xs text-red-500 col-span-2">{{ dateError }}</p>
-      </div>
+
 <!-- Min Avg Goals -->
 <div>
   <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
@@ -1391,7 +1369,7 @@ const validateMatchCount = () => {
   if (isNaN(count) || count < 2) {
     matchCountError.value = 'Please select at least 2 matches';
   } else if (count > 99999) {
-    matchCountError.value = 'Maximum 99999 matches allowed';
+    matchCountError.value = 'Maximum 9999 matches allowed';
   } else {
     matchCountError.value = '';
   }
