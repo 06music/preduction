@@ -382,7 +382,7 @@
 </div>
 
 <!-- League Filter -->
-<div>
+<!-- <div>
   <label class="block text-sm font-medium text-gray-700">🌍 League</label>
   <select
     v-model="leagueFilter"
@@ -397,11 +397,11 @@
       {{ league }}
     </option>
   </select>
-</div>
+</div> -->
 
 
         <!-- Min Confidence -->
-        <div>
+       <!--  <div>
             <label class="block text-sm font-medium text-gray-700">Min Confidence</label>
             <select
                 v-model="minProbability"
@@ -413,7 +413,7 @@
                 <option value="70">70%+</option>
                 <option value="80">80%+</option>
             </select>
-        </div>
+        </div> -->
 
        <!-- Top Teams Only -->
 <div>
@@ -453,6 +453,32 @@
       step="1"
       v-model.number="homeWinRateMax"
       class="w-1/2 accent-green-500 transition-all"
+    />
+  </div>
+</div>
+<!-- Home Loss Rate Range Filter -->
+<div>
+  <label class="mb-1 block text-sm font-medium text-gray-700">🏠❌ Home Loss Rate (%)</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ homeLossRateMin }}%</span>
+    <span>Max: {{ homeLossRateMax }}%</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <input
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      v-model.number="homeLossRateMin"
+      class="w-1/2 accent-red-400 transition-all"
+    />
+    <input
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      v-model.number="homeLossRateMax"
+      class="w-1/2 accent-red-400 transition-all"
     />
   </div>
 </div>
@@ -670,6 +696,32 @@
                 Showing picks with odds between <strong>{{ minOdds }}</strong> and <strong>{{ maxOdds }}</strong>
             </div>
         </div>
+<!-- Quick Load Combo Buttons -->
+<div class="space-y-2">
+  <h4 class="text-sm font-semibold text-gray-700 mb-2">⚡ Quick Load Combos</h4>
+
+  <div class="flex flex-wrap gap-2">
+    <button @click="loadStrongHomeWin" class="rounded bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600 transition">🏡 Strong Home Win</button>
+    <button @click="loadStrongAwayWin" class="rounded bg-blue-500 text-white px-3 py-1 text-sm hover:bg-blue-600 transition">🚗 Strong Away Win</button>
+    <button @click="loadOverGoalsBomb" class="rounded bg-yellow-500 text-white px-3 py-1 text-sm hover:bg-yellow-600 transition">🎯 Over Goals Bomb</button>
+    <button @click="loadUltraSafeLock" class="rounded bg-purple-500 text-white px-3 py-1 text-sm hover:bg-purple-600 transition">🛡️ Ultra Safe Lock</button>
+    <button @click="loadHomeCollapse" class="rounded bg-red-500 text-white px-3 py-1 text-sm hover:bg-red-600 transition">💣 Home Collapse</button>
+    <button @click="loadAwayCollapse" class="rounded bg-red-400 text-white px-3 py-1 text-sm hover:bg-red-500 transition">
+     🚗💥 Away Collapse
+    </button>
+    <button @click="loadDrawFocus" class="rounded bg-gray-500 text-white px-3 py-1 text-sm hover:bg-gray-600 transition">
+  🤝 Draw Focus Combo
+</button>
+<button @click="loadBTTSFocus" class="rounded bg-orange-500 text-white px-3 py-1 text-sm hover:bg-orange-600 transition">
+  🎯 BTTS Focus Combo
+</button>
+
+    <button @click="autoCombo" class="rounded bg-indigo-500 text-white px-3 py-1 text-sm hover:bg-indigo-600 transition">
+  🤖 Combo AUTO
+</button>
+
+  </div>
+</div>
 
         <!-- Predicted Result Filter -->
         <div>
@@ -795,124 +847,8 @@
                     </div>
 
                     <!-- Must-Watch Matches -->
-                    <div v-if="mustWatchMatches.length" class="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-                        <!-- Header -->
-                        <div class="border-b border-yellow-100 bg-yellow-50 px-6 py-4">
-                            <h2 class="flex items-center gap-2 text-lg font-bold text-yellow-800">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 text-yellow-500"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M13 16h-1v-4h-1m0-4h.01M12 20h.01M9 12h.01M15 12h.01M12 8v.01"
-                                    />
-                                </svg>
-                                Must-Watch Matches Today
-                            </h2>
-                        </div>
 
-                        <!-- Match List -->
-                        <div class="divide-y divide-gray-100">
-                            <div
-                            v-for="match in mustWatchMatches.slice(0, mustWatchLimit)"
-                            :key="match.id"
-  class="grid grid-cols-1 gap-4 px-6 py-5 sm:grid-cols-12 bg-white border-b border-gray-100 hover:bg-gray-50 transition"
->
-  <!-- Left Time + Date -->
-  <div class="col-span-2 text-xs text-gray-500">
-    <div class="font-medium text-gray-700">🗓 {{ match.time_str.split(' ')[0] }}</div>
-    <div>⏰ {{ match.time_str.split(' ')[1] }}</div>
-  </div>
 
-  <!-- Teams + Stats -->
-  <div class="col-span-6 space-y-2">
-    <!-- Match Teams -->
-    <div class="text-sm font-semibold text-gray-800">
-      {{ match.home_team }}
-      <span v-if="match.home_rank" class="text-xs text-gray-400"> (#{{ match.home_rank }}) </span>
-      <span class="text-gray-500">vs</span>
-      {{ match.away_team }}
-      <span v-if="match.away_rank" class="text-xs text-gray-400"> (#{{ match.away_rank }}) </span>
-    </div>
-
-    <!-- Home Stats -->
-    <div class="bg-green-50 text-xs rounded-md px-3 py-2 text-green-700">
-      <strong class="block mb-1">🏠 Home Stats</strong>
-      GP: {{ match.home_gp }} • W: {{ match.home_w }} • D: {{ match.home_d }} • L: {{ match.home_l }}<br />
-      GF: {{ match.home_gf }} • GA: {{ match.home_ga }} • GD: {{ match.home_gd }} • Pts: {{ match.home_pts }}
-    </div>
-
-    <!-- Away Stats -->
-    <div class="bg-blue-50 text-xs rounded-md px-3 py-2 text-blue-700">
-      <strong class="block mb-1">🚗 Away Stats</strong>
-      GP: {{ match.away_gp }} • W: {{ match.away_w }} • D: {{ match.away_d }} • L: {{ match.away_l }}<br />
-      GF: {{ match.away_gf }} • GA: {{ match.away_ga }} • GD: {{ match.away_gd }} • Pts: {{ match.away_pts }}
-    </div>
-
-    <!-- Odds Section -->
-    <div class="bg-gray-50 text-xs rounded-md px-3 py-1.5 text-gray-700 flex flex-wrap gap-3 items-center">
-      <strong class="text-gray-800">💸 Odds</strong>
-      <span v-if="match.live_odds">Live: <strong class="text-indigo-700">{{ match.live_odds }}</strong></span>
-    </div>
-  </div>
-
-  <!-- Prediction -->
-  <div class="col-span-2 flex items-center justify-center text-sm font-medium text-gray-700">
-    🧠
-    {{
-      match.prediction === '1'
-        ? 'Home Win'
-        : match.prediction === 'X'
-        ? 'Draw'
-        : match.prediction === '2'
-        ? 'Away Win'
-        : 'Unknown'
-    }}
-  </div>
-
-  <!-- Action -->
-  <div class="col-span-2 flex flex-col items-end justify-center space-y-1">
-    <span
-      v-if="getHighestProbability(match) > 60"
-      class="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800"
-    >
-      🔥 Hot Pick
-    </span>
-    <a :href="match.match_url" target="_blank" class="text-sm text-blue-600 hover:underline">👀 View</a>
-  </div>
-</div>
-
-                        </div>
-
-                      <!-- See More Button -->
-<div class="border-t border-gray-100 py-4 text-center" v-if="mustWatchMatches.length > mustWatchLimit">
-  <button
-    @click="mustWatchLimit += 10"
-    class="text-sm font-medium text-yellow-700 hover:underline"
-  >
-    🔼 Show More ({{ mustWatchLimit }}/{{ mustWatchMatches.length }})
-  </button>
-</div>
-
-<!-- Optional "Show Less" -->
-<div v-else-if="mustWatchMatches.length > 10" class="text-center pb-6">
-  <button
-    @click="mustWatchLimit = 10"
-    class="text-sm text-gray-500 hover:underline"
-  >
-    🔽 Show Less
-  </button>
-</div>
-
-                    </div>
-
-                    <div ref="adContainer"></div>
                 </div>
 
                 <!-- Main Content Area -->
@@ -1231,6 +1167,15 @@
       </span>
       <span class="font-semibold">{{ getHomeWinRate(match) }}%</span>
     </div>
+    <!-- Home Loss Rate -->
+<div class="flex justify-between">
+  <span class="flex items-center gap-2 font-medium">
+    <span class="text-red-400">🏠❌</span>
+    Home Loss Rate:
+  </span>
+  <span class="font-semibold">{{ getHomeLossRate(match) }}%</span>
+</div>
+
     <div class="flex justify-between">
       <span class="flex items-center gap-2 font-medium">
         <span class="text-blue-500">🚗</span>
@@ -1398,6 +1343,8 @@ const performanceScoreFilter = ref('all'); // Default to 'all'
 const showNotStarted = ref(false); // to toggle between showing all or not started matches
 const homeWinRateMin = ref(0);
 const homeWinRateMax = ref(100);
+const homeLossRateMin = ref(0);
+const homeLossRateMax = ref(100);
 
 const awayWinRateMin = ref(0);
 const awayWinRateMax = ref(100);
@@ -1506,6 +1453,11 @@ const openComboBuilder = () => {
 function getHomeWinRate(match) {
   if (!match.home_gp) return 0; // Prevent division by 0
   return ((match.home_w / match.home_gp) * 100).toFixed(1); // Return percentage with 1 decimal place
+}
+// Function to calculate Home Loss Rate (HLR)
+function getHomeLossRate(match) {
+  if (!match.home_gp) return 0; // Prevent division by 0
+  return ((match.home_l / match.home_gp) * 100).toFixed(1); // Return percentage with 1 decimal place
 }
 
 // Function to calculate Away Win Rate
@@ -1749,7 +1701,7 @@ const selectedTags = ref([]);
 const smartTagOptions = [
   { label: '📉 Home Negative GD', value: '📉 Home Negative GD' },
   { label: '📉 Away Negative GD', value: '📉 Away Negative GD' },
-  { label: '📉 Both Teams Negative GD', value: '📉 Both Teams Negative GD' },
+/*   { label: '📉 Both Teams Negative GD', value: '📉 Both Teams Negative GD' },
   { label: '🎯 Consistent Scorer', value: '🎯 Consistent Scorer' },
   { label: '🔥 Streak Team', value: '🔥 Streak Team' },
   { label: '⚡ Attacking Momentum', value: '⚡ Attacking Momentum' },
@@ -1758,7 +1710,7 @@ const smartTagOptions = [
   { label: '🛡️ Safe Pick', value: '🛡️ Safe Pick' },
   { label: '🌅 Morning Kickoff', value: '🌅 Morning Kickoff' },
 { label: '🌤️ Afternoon Match', value: '🌤️ Afternoon Match' },
-{ label: '🌙 Evening Clash', value: '🌙 Evening Clash' },
+{ label: '🌙 Evening Clash', value: '🌙 Evening Clash' }, */
 
 ];
 
@@ -1920,12 +1872,16 @@ const filteredMatches = computed(() => {
 // Filter by Home Win Rate, Away Win Rate, and Away Loss Rate
 result = result.filter((match) => {
   const homeWin = getHomeWinRate(match);
+  const homeLoss = getHomeLossRate(match); // 🔥 ajoute cette ligne
+
   const awayWin = getAwayWinRate(match);
   const awayLoss = getAwayLossRate(match);
 
   return (
     homeWin >= homeWinRateMin.value &&
     homeWin <= homeWinRateMax.value &&
+    homeLoss >= homeLossRateMin.value && // 🔥 ajoute cette condition
+    homeLoss <= homeLossRateMax.value &&  // 🔥 ajoute cette condition
     awayWin >= awayWinRateMin.value &&
     awayWin <= awayWinRateMax.value &&
     awayLoss >= awayLossRateMin.value &&
@@ -2332,6 +2288,7 @@ const resetFilters = () => {
   // ➡️ Home/Away Win/Loss Rates
   homeWinRateMin.value = 0;
   homeWinRateMax.value = 100;
+
   awayWinRateMin.value = 0;
   awayWinRateMax.value = 100;
   awayLossRateMin.value = 0;
@@ -2439,6 +2396,8 @@ if (match.time_str) {
   }
 
   return tags;
+
+
 }
 
 
@@ -2470,6 +2429,133 @@ const toggleTagFilter = (tag) => {
     if (index === -1) selectedTags.value.push(tag);
     else selectedTags.value.splice(index, 1);
 };
+
+// Quick Load Combo Functions
+function loadStrongHomeWin() {
+  homeWinRateMin.value = 65;
+  homeWinRateMax.value = 100;
+  homeLossRateMin.value = 0;
+  homeLossRateMax.value = 20;
+  awayWinRateMin.value = 0;
+  awayWinRateMax.value = 40;
+  awayLossRateMin.value = 50;
+  awayLossRateMax.value = 100;
+ // minOdds.value = 1.3;
+ // maxOdds.value = 3.0;
+}
+
+function loadStrongAwayWin() {
+  homeWinRateMin.value = 0;
+  homeWinRateMax.value = 50;
+  homeLossRateMin.value = 40;
+  homeLossRateMax.value = 100;
+  awayWinRateMin.value = 50;
+  awayWinRateMax.value = 100;
+  awayLossRateMin.value = 0;
+  awayLossRateMax.value = 40;
+ // minOdds.value = 1.3;
+  //maxOdds.value = 4.0;
+}
+
+function loadOverGoalsBomb() {
+  homeWinRateMin.value = 30;
+  homeWinRateMax.value = 70;
+  homeLossRateMin.value = 30;
+  homeLossRateMax.value = 70;
+  awayWinRateMin.value = 30;
+  awayWinRateMax.value = 70;
+  awayLossRateMin.value = 30;
+  awayLossRateMax.value = 70;
+  minGF.value = 40;
+  //minOdds.value = 1.3;
+  //maxOdds.value = 3.5;
+}
+
+function loadUltraSafeLock() {
+  homeWinRateMin.value = 65;
+  homeWinRateMax.value = 100;
+  homeLossRateMin.value = 0;
+  homeLossRateMax.value = 20;
+  awayLossRateMin.value = 50;
+  awayLossRateMax.value = 100;
+  winGapMin.value = 10;
+  //minOdds.value = 1.2;
+  //maxOdds.value = 2.5;
+}
+
+function loadHomeCollapse() {
+  homeWinRateMin.value = 0;
+  homeWinRateMax.value = 30;
+  homeLossRateMin.value = 60;
+  homeLossRateMax.value = 100;
+  awayWinRateMin.value = 40;
+  awayWinRateMax.value = 70;
+  awayLossRateMin.value = 0;
+  awayLossRateMax.value = 50;
+  //minOdds.value = 1.4;
+  //maxOdds.value = 4.0;
+}
+function autoCombo() {
+  // Compter les matchs avec Home Win Rate > 70%
+  const strongHome = filteredMatches.value.filter(m => getHomeWinRate(m) > 70).length;
+  // Compter les Away Wins > 55%
+  const strongAway = filteredMatches.value.filter(m => getAwayWinRate(m) > 55).length;
+  // Compter les matchs Over 2.5 buts
+  const highGoals = filteredMatches.value.filter(m => getAvgGoals(m) > 2.8).length;
+
+  // Décider du meilleur combo
+  if (strongHome >= strongAway && strongHome >= highGoals) {
+    loadStrongHomeWin(); // Appelle la fonction déjà faite
+    alert("🏡 Strong Home Win Combo Chargé !");
+  } else if (strongAway >= strongHome && strongAway >= highGoals) {
+    loadStrongAwayWin();
+    alert("🚗 Strong Away Win Combo Chargé !");
+  } else {
+    loadOverGoalsBomb();
+    alert("🎯 Over Goals Bomb Combo Chargé !");
+  }
+}
+function loadAwayCollapse() {
+  homeWinRateMin.value = 40;
+  homeWinRateMax.value = 100;
+  homeLossRateMin.value = 0;
+  homeLossRateMax.value = 50;
+  awayWinRateMin.value = 0;
+  awayWinRateMax.value = 30;
+  awayLossRateMin.value = 60;
+  awayLossRateMax.value = 100;
+ // minOdds.value = 1.3;
+  //maxOdds.value = 3.0;
+}
+// Draw Focus Combo - Matchs très équilibrés
+function loadDrawFocus() {
+  homeWinRateMin.value = 30;
+  homeWinRateMax.value = 70;
+  homeLossRateMin.value = 30;
+  homeLossRateMax.value = 70;
+  awayWinRateMin.value = 30;
+  awayWinRateMax.value = 70;
+  awayLossRateMin.value = 30;
+  awayLossRateMax.value = 70;
+  //minOdds.value = 2.5;
+ // maxOdds.value = 4.0;
+}
+
+// BTTS Focus Combo - Les deux équipes marquent
+function loadBTTSFocus() {
+  homeWinRateMin.value = 30;
+  homeWinRateMax.value = 80;
+  homeLossRateMin.value = 20;
+  homeLossRateMax.value = 70;
+  awayWinRateMin.value = 30;
+  awayWinRateMax.value = 80;
+  awayLossRateMin.value = 20;
+  awayLossRateMax.value = 70;
+  minGF.value = 40; // Minimum goals for
+  //minOdds.value = 1.30;
+  //maxOdds.value = 3.0;
+}
+
 // Load on mount
 onMounted(() => {
     // Load matches
