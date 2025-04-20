@@ -304,336 +304,266 @@
                 <div class="space-y-6 lg:col-span-1">
                     <!-- Filters Card -->
                 <!-- Filters Card -->
-<div v-if="showFilters" class="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-xl transition duration-300 hover:shadow-lg">
-    <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-800">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-            />
-        </svg>
-        <span class="font-semibold">Filter Matches</span>
+                <div v-if="showFilters" class="rounded-xl border border-gray-100 bg-white p-5 shadow-lg transition-all hover:shadow-xl">
+  <div class="mb-6 flex items-center justify-between">
+    <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-800">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+      </svg>
+      <span>Filters</span>
     </h3>
-
-    <div class="space-y-6">
-        <!-- Quick Date Shortcuts -->
-<div class="flex gap-2 text-sm">
-  <button
-    @click="setToday"
-    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-100"
-  >
-    📅 Today
-  </button>
-  <button
-    @click="setTomorrow"
-    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-100"
-  >
-    ⏭️ Tomorrow
-  </button>
-</div>
-
-        <!-- Date -->
-      <!-- Date Range -->
-<div class="grid grid-cols-2 gap-3">
-  <div>
-    <label class="block text-sm font-medium text-gray-700">Start Date</label>
-    <input
-      type="date"
-      v-model="startDateFilter"
-      class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-    />
+    <button class="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
-  <div>
-    <label class="block text-sm font-medium text-gray-700">End Date</label>
-    <input
-      type="date"
-      v-model="endDateFilter"
-      class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-    />
-  </div>
-</div>
-<!-- Time Range Filter -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">🕒 Time of Day Range</label>
-  <div class="text-xs text-gray-500 mb-2 flex justify-between">
-    <span>From: {{ timeRangeStart }}</span>
-    <span>To: {{ timeRangeEnd }}</span>
-  </div>
-  <div class="flex items-center gap-2">
-    <input
-      type="time"
-      v-model="timeRangeStart"
-      class="w-1/2 rounded border-gray-300 text-sm shadow-sm focus:ring-red-500"
-    />
-    <input
-      type="time"
-      v-model="timeRangeEnd"
-      class="w-1/2 rounded border-gray-300 text-sm shadow-sm focus:ring-red-500"
-    />
-  </div>
-</div>
 
-<!-- League Filter -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">🌍 League</label>
-  <select
-    v-model="leagueFilter"
-    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-  >
-    <option value="">All Leagues</option>
-    <option
-      v-for="league in uniqueLeagues"
-      :key="league"
-      :value="league"
-    >
-      {{ league }}
-    </option>
-  </select>
-</div>
-
-
-        <!-- Min Confidence -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700">Min Confidence</label>
-            <select
-                v-model="minProbability"
-                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-            >
-                <option value="0">Any %</option>
-                <option value="50">50%+</option>
-                <option value="60">60%+</option>
-                <option value="70">70%+</option>
-                <option value="80">80%+</option>
-            </select>
-        </div>
-
-       <!-- Top Teams Only -->
-<div>
-    <label class="block text-sm font-medium text-gray-700">Team Quality</label>
-    <select
-        v-model="topTeamsFilter"
-        class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-    >
-        <option value="false">All Teams</option>
-        <option value="1">Top 1 Ranked Only</option>
-        <option value="2">Top 2 Ranked Only</option>
-        <option value="3">Top 3 Ranked Only</option>
-        <option value="4">Top 4 Ranked Only</option>
-        <option value="5">Top 5 Ranked Only</option>
-    </select>
-</div>
-
-<!-- H/A Score Filter -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">H/A Score</label>
-  <select
-    v-model="haScoreFilter"
-    class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-  >
-    <option value="all">All</option>
-    <option value="0-30">0–30%</option>
-    <option value="30-60">30–60%</option>
-    <option value="60-70">60–70%</option>
-    <option value="70-80">70–80%</option>
-    <option value="80-100">80–100%</option>
-  </select>
-</div>
-
-<!-- GP Filter Slider: Minimum Games Played (Both Teams) -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Minimum Games Played (GP)</label>
-  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
-    <span>Min: {{ minGP }}</span>
-    <span class="text-gray-400">(Both Teams)</span>
-  </div>
-  <input
-    type="range"
-    min="1"
-    max="30"
-    step="1"
-    v-model.number="minGP"
-    class="w-full accent-blue-500 transition-all"
-  />
-</div>
-
-<!-- Negative GD Slider: Maximum Negative Goal Difference -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Max Negative GD</label>
-  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
-    <span>Max: {{ maxNegativeGD }}</span>
-    <span class="text-gray-400">(e.g., -30)</span>
-  </div>
-  <input
-    type="range"
-    min="-50"
-    max="0"
-    step="1"
-    v-model.number="maxNegativeGD"
-    class="w-full accent-red-500 transition-all"
-  />
-</div>
-
-<!-- High Scoring Team Slider: Minimum Goals For -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">Minimum GF (Goals For)</label>
-  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
-    <span>Min: {{ minGF }}</span>
-    <span class="text-gray-400">(e.g., 50)</span>
-  </div>
-  <input
-    type="range"
-    min="0"
-    max="100"
-    step="1"
-    v-model.number="minGF"
-    class="w-full accent-green-500 transition-all"
-  />
-</div>
-
-<!-- Win Difference Filter -->
-<!-- Win Difference Slider -->
-<div>
-  <label class="block text-sm font-medium text-gray-700">🏆 Min Win Gap</label>
-  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
-    <span>Min: {{ winGapMin }}</span>
-    <span class="text-gray-400">Difference in Wins</span>
-  </div>
-  <input
-    type="range"
-    min="0"
-    max="50"
-    step="1"
-    v-model.number="winGapMin"
-    class="w-full accent-purple-500"
-  />
-</div>
-
-
-        <!-- Smart Insights (Tag Filter Buttons) -->
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Smart Insights</label>
-            <div class="flex flex-wrap gap-2">
-                <button
-                    v-for="tag in smartTagOptions"
-                    :key="tag.label"
-                    @click="toggleTagFilter(tag.value)"
-                    :class="[
-                        'rounded-full border px-3 py-1 text-sm font-medium transition-all',
-                        selectedTags.includes(tag.value)
-                            ? 'border-red-300 bg-red-100 text-red-700'
-                            : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-100',
-                    ]"
-                >
-                    {{ tag.label }}
-                </button>
-            </div>
-        </div>
-
-        <!-- Advanced Filters -->
-        <div class="grid grid-cols-1 gap-4 pt-2">
-            <div class="flex items-center gap-2">
-                <input
-                    type="checkbox"
-                    v-model="onlyWithOdds"
-                    id="onlyWithOdds"
-                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <label for="onlyWithOdds" class="text-sm text-gray-700">💸 Show only matches with odds</label>
-            </div>
-            <div class="flex items-center gap-2">
-                <input
-                    type="checkbox"
-                    v-model="onlyWithStats"
-                    id="onlyWithStats"
-                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <label for="onlyWithStats" class="text-sm text-gray-700">📊 Show only matches with full stats</label>
-            </div>
-        </div>
-
-        <!-- Odds Range Filter -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700">🎯 Odds Range</label>
-            <div class="mb-1 flex justify-between text-xs text-gray-500">
-                <span>Min: {{ minOdds }}</span>
-                <span>Max: {{ maxOdds }}</span>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    step="0.1"
-                    v-model.number="minOdds"
-                    class="w-1/2 accent-red-500 transition-all"
-                />
-                <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    step="0.1"
-                    v-model.number="maxOdds"
-                    class="w-1/2 accent-red-500 transition-all"
-                />
-            </div>
-
-            <div class="mt-1 text-xs text-gray-400">
-                Showing picks with odds between <strong>{{ minOdds }}</strong> and <strong>{{ maxOdds }}</strong>
-            </div>
-        </div>
-
-        <!-- Predicted Result Filter -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700">Result Prediction</label>
-            <select
-                v-model="pickFilter"
-                class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500 transition-all"
-            >
-                <option value="">All Results</option>
-                <option value="1">🏠 Home Win</option>
-                <option value="X">🤝 Draw</option>
-                <option value="2">🚗 Away Win</option>
-            </select>
-        </div>
-<!-- Not Started Filter Button -->
-<button
-    @click="showNotStarted = !showNotStarted"
-    class="group flex items-center gap-2 rounded-xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 px-4 py-2.5 shadow-sm transition-all hover:border-red-200 hover:shadow-md"
->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    <span class="font-medium text-gray-700">{{ showNotStarted ? 'Show All Matches' : 'Show Not Started Matches' }}</span>
-</button>
-
-
-        <!-- Actions -->
-        <div class="mt-6 flex justify-end gap-3">
-            <button
-                @click="resetFilters"
-                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
-            >
-                Reset
-            </button>
-            <button
-                @click="applyFilters"
-                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-all"
-            >
-                Apply
-            </button>
-        </div>
+  <div class="space-y-5">
+    <!-- Quick Date Controls -->
+    <div class="flex flex-wrap gap-2">
+      <button @click="setToday" class="flex items-center gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Today
+      </button>
+      <button @click="setTomorrow" class="flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Tomorrow
+      </button>
+      <button @click="setWeekend" class="flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Weekend
+      </button>
     </div>
-</div>
 
+    <!-- Primary Filters -->
+    <!-- Date Range -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">Date Range</label>
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        <div class="relative w-full">
+          <input type="date" v-model="startDateFilter" class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+        </div>
+        <span class="text-gray-400 hidden sm:block">to</span>
+        <span class="text-gray-400 sm:hidden my-1">to</span>
+        <div class="relative w-full">
+          <input type="date" v-model="endDateFilter" class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Range -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">Time Range</label>
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        <div class="relative w-full">
+          <input type="time" v-model="timeRangeStart" class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+        </div>
+        <span class="text-gray-400 hidden sm:block">to</span>
+        <span class="text-gray-400 sm:hidden my-1">to</span>
+        <div class="relative w-full">
+          <input type="time" v-model="timeRangeEnd" class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+        </div>
+      </div>
+    </div>
+
+    <!-- League -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">League</label>
+      <div class="relative">
+        <select v-model="leagueFilter" class="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-8 text-sm text-gray-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <option value="">All Leagues</option>
+          <option v-for="league in uniqueLeagues" :key="league" :value="league">{{ league }}</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Prediction -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">Prediction</label>
+      <div class="flex gap-2">
+        <button @click="pickFilter = '1'" class="flex-1 rounded-lg border border-gray-200 py-2 text-sm font-medium transition-all" :class="pickFilter === '1' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'">
+          Home
+        </button>
+        <button @click="pickFilter = 'X'" class="flex-1 rounded-lg border border-gray-200 py-2 text-sm font-medium transition-all" :class="pickFilter === 'X' ? 'bg-gray-100 border-gray-300 text-gray-800' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'">
+          Draw
+        </button>
+        <button @click="pickFilter = '2'" class="flex-1 rounded-lg border border-gray-200 py-2 text-sm font-medium transition-all" :class="pickFilter === '2' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'">
+          Away
+        </button>
+      </div>
+    </div>
+
+    <!-- Min Confidence -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">Min Confidence</label>
+      <div class="relative">
+        <select v-model="minProbability" class="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-8 text-sm text-gray-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <option value="0">Any %</option>
+          <option value="50">50%+</option>
+          <option value="60">60%+</option>
+          <option value="70">70%+</option>
+          <option value="80">80%+</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Quality -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700">Team Quality</label>
+      <div class="relative">
+        <select v-model="topTeamsFilter" class="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-8 text-sm text-gray-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <option value="false">All Teams</option>
+          <option value="1">Top 1 Ranked</option>
+          <option value="2">Top 2 Ranked</option>
+          <option value="3">Top 3 Ranked</option>
+          <option value="4">Top 4 Ranked</option>
+          <option value="5">Top 5 Ranked</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sliders Group -->
+    <div class="space-y-4 rounded-lg bg-gray-50 p-4">
+      <h4 class="mb-2 text-sm font-semibold text-gray-700">Statistical Filters</h4>
+
+      <!-- Odds Range -->
+      <div>
+        <div class="mb-1 flex items-center justify-between">
+          <label class="text-xs font-medium text-gray-600">Odds Range</label>
+          <span class="text-xs text-gray-500">{{ minOdds }} - {{ maxOdds }}</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-2">
+          <input type="range" min="1" max="10" step="0.1" v-model.number="minOdds" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+          <input type="range" min="1" max="10" step="0.1" v-model.number="maxOdds" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+        </div>
+      </div>
+
+      <!-- Home Win Rate -->
+      <div>
+        <div class="mb-1 flex items-center justify-between">
+          <label class="text-xs font-medium text-gray-600">Home Win Rate (%)</label>
+          <span class="text-xs text-gray-500">{{ homeWinRateMin }}% - {{ homeWinRateMax }}%</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-2">
+          <input type="range" min="0" max="100" step="1" v-model.number="homeWinRateMin" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" />
+          <input type="range" min="0" max="100" step="1" v-model.number="homeWinRateMax" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" />
+        </div>
+      </div>
+
+      <!-- Away Win Rate -->
+      <div>
+        <div class="mb-1 flex items-center justify-between">
+          <label class="text-xs font-medium text-gray-600">Away Win Rate (%)</label>
+          <span class="text-xs text-gray-500">{{ awayWinRateMin }}% - {{ awayWinRateMax }}%</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-2">
+          <input type="range" min="0" max="100" step="1" v-model.number="awayWinRateMin" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-green-600 focus:outline-none focus:ring-2 focus:ring-green-300" />
+          <input type="range" min="0" max="100" step="1" v-model.number="awayWinRateMax" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-green-600 focus:outline-none focus:ring-2 focus:ring-green-300" />
+        </div>
+      </div>
+
+      <!-- Min Win Gap -->
+      <div>
+        <div class="mb-1 flex items-center justify-between">
+          <label class="text-xs font-medium text-gray-600">Minimum Win Gap</label>
+          <span class="text-xs text-gray-500">{{ winGapMin }}</span>
+        </div>
+        <input type="range" min="0" max="50" step="1" v-model.number="winGapMin" class="h-1 w-full appearance-none rounded-lg bg-gray-300 accent-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-300" />
+      </div>
+    </div>
+
+    <!-- Smart Insights -->
+    <div>
+      <label class="mb-2 block text-sm font-medium text-gray-700">Smart Insights</label>
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="tag in smartTagOptions"
+          :key="tag.label"
+          @click="toggleTagFilter(tag.value)"
+          :class="[
+            'rounded-full px-3 py-1.5 text-xs font-medium transition-all',
+            selectedTags.includes(tag.value)
+              ? 'bg-indigo-100 text-indigo-700 ring-1 ring-indigo-300'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+          ]"
+        >
+          {{ tag.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Additional Options -->
+    <div class="rounded-lg bg-gray-50 p-4">
+      <h4 class="mb-3 text-sm font-semibold text-gray-700">Additional Options</h4>
+      <div class="space-y-3">
+        <label class="flex items-center gap-2">
+          <div class="relative inline-block h-5 w-10 flex-shrink-0 cursor-pointer rounded-full bg-gray-300 transition-colors duration-200 ease-in-out">
+            <input type="checkbox" v-model="onlyWithOdds" class="absolute h-0 w-0 opacity-0" />
+            <span class="absolute left-0 top-0 h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ease-in-out" :class="onlyWithOdds ? 'translate-x-5 bg-indigo-600' : 'translate-x-0'"></span>
+          </div>
+          <span class="text-sm text-gray-700">Show only matches with odds</span>
+        </label>
+
+        <label class="flex items-center gap-2">
+          <div class="relative inline-block h-5 w-10 flex-shrink-0 cursor-pointer rounded-full bg-gray-300 transition-colors duration-200 ease-in-out">
+            <input type="checkbox" v-model="onlyWithStats" class="absolute h-0 w-0 opacity-0" />
+            <span class="absolute left-0 top-0 h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ease-in-out" :class="onlyWithStats ? 'translate-x-5 bg-indigo-600' : 'translate-x-0'"></span>
+          </div>
+          <span class="text-sm text-gray-700">Show only matches with full stats</span>
+        </label>
+
+        <button @click="showNotStarted = !showNotStarted" class="flex w-full items-center justify-between rounded-lg border border-gray-200 bg-white p-2 text-sm transition-all hover:bg-gray-50">
+          <span class="font-medium text-gray-700">{{ showNotStarted ? 'Show All Matches' : 'Show Not Started Matches' }}</span>
+          <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button @click="resetFilters" class="order-2 sm:order-1 flex-1 rounded-lg border border-gray-200 bg-white py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50">
+        Reset All
+      </button>
+      <button @click="applyFilters" class="order-1 sm:order-2 flex-1 rounded-lg bg-indigo-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700">
+        Apply Filters
+      </button>
+    </div>
+  </div>
+</div>
 
                     <!-- Modern Stats Card -->
                     <div
@@ -1316,6 +1246,14 @@ const ALR_WEIGHT = 0.2;   // Weight of away loss rate
 const GD_WEIGHT = 0.1;    // Weight of goal difference
 const performanceScoreFilter = ref('all'); // Default to 'all'
 const showNotStarted = ref(false); // to toggle between showing all or not started matches
+const homeWinRateMin = ref(0);
+const homeWinRateMax = ref(100);
+
+const awayWinRateMin = ref(0);
+const awayWinRateMax = ref(100);
+
+const awayLossRateMin = ref(0);
+const awayLossRateMax = ref(100);
 
 const comboAvgGoals = computed(() => {
   if (!userSmartCombo.value.length) return 0;
@@ -1808,6 +1746,8 @@ const filteredMatches = computed(() => {
 
 
 
+
+
     if (timeRangeStart.value && timeRangeEnd.value) {
   const [startHour, startMinute] = timeRangeStart.value.split(':').map(Number);
   const [endHour, endMinute] = timeRangeEnd.value.split(':').map(Number);
@@ -1825,6 +1765,23 @@ const filteredMatches = computed(() => {
     return matchTotal >= startTotal && matchTotal <= endTotal;
   });
 }
+
+
+// Filter by Home Win Rate, Away Win Rate, and Away Loss Rate
+result = result.filter((match) => {
+  const homeWin = getHomeWinRate(match);
+  const awayWin = getAwayWinRate(match);
+  const awayLoss = getAwayLossRate(match);
+
+  return (
+    homeWin >= homeWinRateMin.value &&
+    homeWin <= homeWinRateMax.value &&
+    awayWin >= awayWinRateMin.value &&
+    awayWin <= awayWinRateMax.value &&
+    awayLoss >= awayLossRateMin.value &&
+    awayLoss <= awayLossRateMax.value
+  );
+});
 
 
 // Filter by High Scoring Team: Only include matches where at least one team has scored more goals than the selected value.
@@ -2220,8 +2177,18 @@ const resetFilters = () => {
   maxNegativeGD.value = 0;
   minGF.value = 0;
   timeRangeStart.value = '';
-    timeRangeEnd.value = '';
+  timeRangeEnd.value = '';
 
+  // ➡️ Home/Away Win/Loss Rates
+  homeWinRateMin.value = 0;
+  homeWinRateMax.value = 100;
+  awayWinRateMin.value = 0;
+  awayWinRateMax.value = 100;
+  awayLossRateMin.value = 0;
+  awayLossRateMax.value = 100;
+
+  // ➡️ Min Win Gap slider (🏆)
+  winGapMin.value = 0;
 };
 
 
