@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50 p-4 md:p-6">
         <div class="">
-            <!-- Header Section fatma -->
+            <!-- Header Section -->
             <!-- Animated Header Section -->
             <header class="animate-fade-in-up mb-8">
                 <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
@@ -93,7 +93,26 @@
                     </div>
                 </div>
             </header>
+            <div v-if="!isVIP" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-sm text-center space-y-4">
+      <h2 class="text-xl font-bold text-gray-800">VIP Access</h2>
+      <input
+  v-model="vipCodeInput"
+  placeholder="Enter VIP Code"
+  class="w-full border rounded-lg p-2 text-center"
+  @keyup.enter="checkVIPCode"
+/>
 
+<button
+  @click="checkVIPCode"
+  class="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg p-2 font-medium"
+>
+  Enter
+</button>
+
+      <p v-if="vipError" class="text-red-500 text-sm">{{ vipError }}</p>
+    </div>
+  </div>
          <!-- Combo Builder Modal -->
 <!-- Combo Builder Modal -->
 <div
@@ -1303,7 +1322,9 @@ const minAvgGoals = ref(0); // Default: 0, means no filter
 const minConfidence = ref(0); // Default: 0, means no filter
 
 const winGapMin = ref(0); // default value can be 0 (show all)
-
+const isVIP = ref(false);
+const vipCodeInput = ref('');
+const vipError = ref('');
 // State
 const matches = ref([]);
 const loading = ref(true);
@@ -2117,16 +2138,35 @@ function setTomorrow() {
   startDateFilter.value = isoTomorrow;
   endDateFilter.value = isoTomorrow;
 }
+function checkVIPCode() {
+  if (vipCodeInput.value === '06store') {
+    // Correct VIP Code
+    localStorage.setItem('vipCode', '06store');
+    isVIP.value = true;
+    vipError.value = '';
+  } else {
+    // Wrong Code
+    vipError.value = 'Incorrect code, try again.';
+    alert('🚫 Incorrect VIP Code');
+  }
+}
 
 onMounted(() => {
-    // Simulate random active users
-    onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  // 1. VIP Access Check
+  if (localStorage.getItem('vipCode') === '06store') {
+    isVIP.value = true;
+  } else {
+    isVIP.value = false;
+  }
 
-    // Optional: update every 30 seconds
-    setInterval(() => {
-        onlineUsers.value = Math.floor(20 + Math.random() * 100);
-    }, 30000);
+  // 2. Simulate random active users
+  onlineUsers.value = Math.floor(20 + Math.random() * 100);
+
+  setInterval(() => {
+    onlineUsers.value = Math.floor(20 + Math.random() * 100);
+  }, 30000);
 });
+
 
 // Computed: Best Bets
 const bestBets = computed(() => {
@@ -2265,6 +2305,8 @@ const applyFilters = () => {
 
 const resetFilters = () => {
   dateFilter.value = '';
+  startDateFilter.value = todayISODate; // reset to today
+  endDateFilter.value = todayISODate;   // reset to today
   minProbability.value = '0';
   leagueFilter.value = '';
   topTeamsFilter.value = 'false';
@@ -2279,25 +2321,32 @@ const resetFilters = () => {
   pickFilter.value = '';
   onlyWithOdds.value = false;
   onlyWithStats.value = false;
+
+  // Range Sliders
   minGP.value = 0;
   maxNegativeGD.value = 0;
   minGF.value = 0;
+  winGapMin.value = 0;
+
+  // Time of Day Range
   timeRangeStart.value = '';
   timeRangeEnd.value = '';
 
-  // ➡️ Home/Away Win/Loss Rates
+  // Home/Away Win/Loss Rates
   homeWinRateMin.value = 0;
   homeWinRateMax.value = 100;
-    homeLossRateMin=0 ; 
-    homeLossRateMax=100
+  homeLossRateMin.value = 0;
+  homeLossRateMax.value = 100;
   awayWinRateMin.value = 0;
   awayWinRateMax.value = 100;
   awayLossRateMin.value = 0;
   awayLossRateMax.value = 100;
 
-  // ➡️ Min Win Gap slider (🏆)
-  winGapMin.value = 0;
+  // Special filters
+  haScoreFilter.value = 'all';
+  showNotStarted.value = false;
 };
+
 
 
 function getMatchTags(match) {
