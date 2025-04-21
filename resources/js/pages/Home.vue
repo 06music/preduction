@@ -2288,7 +2288,8 @@ const resetFilters = () => {
   // ➡️ Home/Away Win/Loss Rates
   homeWinRateMin.value = 0;
   homeWinRateMax.value = 100;
-
+    homeLossRateMin=0 ; 
+    homeLossRateMax=100
   awayWinRateMin.value = 0;
   awayWinRateMax.value = 100;
   awayLossRateMin.value = 0;
