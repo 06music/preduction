@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50 p-4 md:p-6">
         <div class="">
-            <!-- Header Section -->
+            <!-- Header Section fatma -->
             <!-- Animated Header Section -->
             <header class="animate-fade-in-up mb-8">
                 <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
