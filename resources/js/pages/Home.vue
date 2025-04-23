@@ -6,7 +6,7 @@
             <header class="animate-fade-in-up mb-8">
                 <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
                     <!-- Logo + Title -->
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4">f
                         <!-- Tunisia Flag Logo -->
                         <div class="group relative transition-all duration-300">
                             <img
@@ -433,6 +433,7 @@
                 <option value="80">80%+</option>
             </select>
         </div> -->
+                                <span class="font-semibold text-gray-800">{{ filteredMatches.length }}</span>
 
        <!-- Top Teams Only -->
 <div>
