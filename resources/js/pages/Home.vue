@@ -6,7 +6,7 @@
             <header class="animate-fade-in-up mb-8">
                 <div class="flex flex-col justify-between gap-6 md:flex-row md:items-center">
                     <!-- Logo + Title -->
-                    <div class="flex items-center gap-4">f
+                    <div class="flex items-center gap-4">
                         <!-- Tunisia Flag Logo -->
                         <div class="group relative transition-all duration-300">
                             <img
@@ -403,7 +403,7 @@
 </div>
 
 <!-- League Filter -->
-<!-- <div>
+<div>
   <label class="block text-sm font-medium text-gray-700">🌍 League</label>
   <select
     v-model="leagueFilter"
@@ -418,7 +418,7 @@
       {{ league }}
     </option>
   </select>
-</div> -->
+</div>
 
 
         <!-- Min Confidence -->
@@ -739,6 +739,12 @@
 
     <button @click="autoCombo" class="rounded bg-indigo-500 text-white px-3 py-1 text-sm hover:bg-indigo-600 transition">
   🤖 Combo AUTO
+</button>
+<button
+  @click="showBestOfBestModal"
+  class="rounded bg-black text-white px-3 py-1 text-sm hover:bg-gray-900 transition"
+>
+  🏆 Best of the Best Bet Slip
 </button>
 
   </div>
@@ -1314,6 +1320,7 @@
 <script setup>
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
+
 const haScoreFilter = ref('all'); // Options: all, 60+, 75+
 const minGP = ref(0);          // Default: Matches with both teams playing more than 10 games.
 const maxNegativeGD = ref(0);   // Default: Matches where either team has GD less than -30.
@@ -1396,6 +1403,10 @@ const filteredCombo = computed(() => {
   });
 });
 
+const uniqueLeagues = computed(() => {
+  const allLeagues = filteredMatches.value.map((m) => m.league).filter(Boolean);
+  return [...new Set(allLeagues)].sort((a, b) => a.localeCompare(b));
+});
 
 const toggleMatchDetails = (matchId) => {
   expandedMatches.value = {
@@ -1859,10 +1870,7 @@ const averageConfidence = computed(() => {
 
     return Math.round(total / filteredMatches.value.length);
 });
-const uniqueLeagues = computed(() => {
-  const allLeagues = filteredMatches.value.map((m) => m.league).filter(Boolean);
-  return [...new Set(allLeagues)].sort((a, b) => a.localeCompare(b));
-});
+
 
 
 // Computed: Filtered Matches
@@ -1870,6 +1878,9 @@ const filteredMatches = computed(() => {
     let result = [...matches.value];
 
 
+    if (leagueFilter.value) {
+  result = result.filter((match) => match.league === leagueFilter.value);
+}
 
 
 
