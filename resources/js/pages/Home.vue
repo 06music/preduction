@@ -340,6 +340,8 @@
             />
         </svg>
         <span class="font-semibold">Filter Matches</span>
+        <Badge variant="secondary">{{ filteredMatches.length }}</Badge>
+
     </h3>
 
     <div class="space-y-6">
@@ -433,7 +435,6 @@
                 <option value="80">80%+</option>
             </select>
         </div> -->
-                                <span class="font-semibold text-gray-800">{{ filteredMatches.length }}</span>
 
        <!-- Top Teams Only -->
 <div>
