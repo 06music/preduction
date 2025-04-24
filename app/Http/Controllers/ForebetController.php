@@ -45,9 +45,10 @@ class ForebetController extends Controller
                 'away_l',
                 'away_gf',
                 'away_ga',
-                'away_gd'
+                'away_gd',
+                'league' // ✅ lowercase
             )
-            ->orderByDesc('timestamp')
+            ->orderByDesc('time_str')
             ->get();
 
         return response()->json($matches);
