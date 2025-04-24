@@ -1320,8 +1320,6 @@
 <script setup>
 import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
-import Multiselect from 'vue-multiselect';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 const haScoreFilter = ref('all'); // Options: all, 60+, 75+
 const minGP = ref(0);          // Default: Matches with both teams playing more than 10 games.
