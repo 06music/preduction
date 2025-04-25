@@ -817,9 +817,7 @@
 <button @click="loadSafeFavorites" class="rounded bg-lime-500 text-white px-3 py-1 text-sm hover:bg-lime-600 transition">
   ✅ Safe Favorites
 </button>
-<button @click="loadEvenBattle" class="rounded bg-gray-400 text-white px-3 py-1 text-sm hover:bg-gray-500 transition">
-  ⚖️ Even Battle
-</button>
+
 
 
   </div>
