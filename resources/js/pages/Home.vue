@@ -420,6 +420,68 @@
   </select>
 </div>
 
+<!-- Home GF Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🏠 Minimum Home Goals For</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minHomeGF }}</span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    v-model.number="minHomeGF"
+    class="w-full accent-green-500 transition-all"
+  />
+</div>
+
+<!-- Away GF Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🚗 Minimum Away Goals For</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minAwayGF }}</span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    v-model.number="minAwayGF"
+    class="w-full accent-blue-500 transition-all"
+  />
+</div>
+<!-- Home GA Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🏠 Minimum Home Goals Against</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minHomeGA }}</span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    v-model.number="minHomeGA"
+    class="w-full accent-red-400 transition-all"
+  />
+</div>
+
+<!-- Away GA Filter -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">🚗 Minimum Away Goals Against</label>
+  <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+    <span>Min: {{ minAwayGA }}</span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    v-model.number="minAwayGA"
+    class="w-full accent-red-400 transition-all"
+  />
+</div>
 
         <!-- Min Confidence -->
        <!--  <div>
@@ -746,6 +808,19 @@
 >
   🏆 Best of the Best Bet Slip
 </button>
+<button @click="loadCrazyGoalFest" class="rounded bg-pink-500 text-white px-3 py-1 text-sm hover:bg-pink-600 transition">
+  🎉 Crazy Goal Fest
+</button>
+<button @click="loadDefenseWall" class="rounded bg-cyan-500 text-white px-3 py-1 text-sm hover:bg-cyan-600 transition">
+  🛡️ Defense Wall
+</button>
+<button @click="loadSafeFavorites" class="rounded bg-lime-500 text-white px-3 py-1 text-sm hover:bg-lime-600 transition">
+  ✅ Safe Favorites
+</button>
+<button @click="loadEvenBattle" class="rounded bg-gray-400 text-white px-3 py-1 text-sm hover:bg-gray-500 transition">
+  ⚖️ Even Battle
+</button>
+
 
   </div>
 </div>
@@ -1329,6 +1404,8 @@ const timeRangeStart = ref('');
 const timeRangeEnd = ref('');
 const minAvgGoals = ref(0); // Default: 0, means no filter
 const minConfidence = ref(0); // Default: 0, means no filter
+const minHomeGF = ref(0); // Minimum Home GF
+const minAwayGF = ref(0); // Minimum Away GF
 
 const winGapMin = ref(0); // default value can be 0 (show all)
 const isVIP = ref(false);
@@ -1341,6 +1418,8 @@ const error = ref(null);
 const showFilters = ref(false);
 const showAllMustWatch = ref(false);
 const mustWatchLimit = ref(10);
+const minHomeGA = ref(0); // Minimum Home Goals Against
+const minAwayGA = ref(0); // Minimum Away Goals Against
 
 const tableView = ref(false);
 const currentPage = ref(1);
@@ -1881,7 +1960,33 @@ const filteredMatches = computed(() => {
     if (leagueFilter.value) {
   result = result.filter((match) => match.league === leagueFilter.value);
 }
+// Filter by Minimum Home GF
+if (minHomeGF.value > 0) {
+  result = result.filter((match) => {
+    return parseInt(match.home_gf || 0) >= minHomeGF.value;
+  });
+}
 
+// Filter by Minimum Away GF
+if (minAwayGF.value > 0) {
+  result = result.filter((match) => {
+    return parseInt(match.away_gf || 0) >= minAwayGF.value;
+  });
+}
+
+// Filter by Minimum Home GA
+if (minHomeGA.value > 0) {
+  result = result.filter((match) => {
+    return parseInt(match.home_ga || 0) >= minHomeGA.value;
+  });
+}
+
+// Filter by Minimum Away GA
+if (minAwayGA.value > 0) {
+  result = result.filter((match) => {
+    return parseInt(match.away_ga || 0) >= minAwayGA.value;
+  });
+}
 
 
     if (timeRangeStart.value && timeRangeEnd.value) {
@@ -2334,6 +2439,10 @@ const resetFilters = () => {
   pickFilter.value = '';
   onlyWithOdds.value = false;
   onlyWithStats.value = false;
+  minHomeGF.value = 0;
+minAwayGF.value = 0;
+minHomeGA.value = 0;
+minAwayGA.value = 0;
 
   // Range Sliders
   minGP.value = 0;
@@ -2602,6 +2711,24 @@ function loadDrawFocus() {
   awayLossRateMax.value = 70;
   //minOdds.value = 2.5;
  // maxOdds.value = 4.0;
+}
+function loadCrazyGoalFest() {
+  minGF.value = 40;
+  minHomeGA.value = 30;
+  minAwayGA.value = 30;
+}
+function loadDefenseWall() {
+  minGF.value = 0;
+  minHomeGA.value = 0;
+  minAwayGA.value = 0;
+  homeWinRateMin.value = 50;
+  homeWinRateMax.value = 80;
+  awayWinRateMin.value = 50;
+  awayWinRateMax.value = 80;
+}
+function loadSafeFavorites() {
+  winGapMin.value = 15; // Big difference in wins
+  minProbability.value = 70; // High win probability
 }
 
 // BTTS Focus Combo - Les deux équipes marquent
