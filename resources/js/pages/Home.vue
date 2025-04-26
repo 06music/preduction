@@ -826,6 +826,7 @@
 <button @click="loadMonsterOver35Goals" class="rounded bg-rose-500 text-white px-3 py-1 text-sm hover:bg-rose-600 transition">
   🧨 Monster Over 3.5
 </button>
+<!-- Buttons -->
 <!-- Strong GG Button (1 GG) -->
 <button @click="loadStrongGG" class="rounded bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600 transition">
   🎯 Strong GG (1GG)
@@ -835,6 +836,7 @@
 <button @click="loadMonsterGG" class="rounded bg-blue-500 text-white px-3 py-1 text-sm hover:bg-blue-600 transition">
   🚀 Monster GG (2GG)
 </button>
+
 
 
   </div>
@@ -2744,6 +2746,36 @@ function loadMonsterOver35Goals() {
   minAwayGA.value = 30;       // Away concedes enough
   minAvgGoals.value = 3.5;     // Minimum average goals per match: 3.5
 }
+// Strong GG Combo - Strong both teams scoring
+function loadStrongGG() {
+  homeWinRateMin.value = 40;
+  homeWinRateMax.value = 80;
+  homeLossRateMin.value = 20;
+  homeLossRateMax.value = 60;
+  awayWinRateMin.value = 40;
+  awayWinRateMax.value = 80;
+  awayLossRateMin.value = 20;
+  awayLossRateMax.value = 60;
+  minGF.value = 45;   // More goals for both teams
+  minHomeGA.value = 30;
+  minAwayGA.value = 30;
+}
+
+// Monster GG Combo - Very aggressive both teams scoring
+function loadMonsterGG() {
+  homeWinRateMin.value = 30;
+  homeWinRateMax.value = 90;
+  homeLossRateMin.value = 20;
+  homeLossRateMax.value = 70;
+  awayWinRateMin.value = 30;
+  awayWinRateMax.value = 90;
+  awayLossRateMin.value = 20;
+  awayLossRateMax.value = 70;
+  minGF.value = 55;   // Even higher goal scoring
+  minHomeGA.value = 40;
+  minAwayGA.value = 40;
+  minAvgGoals.value = 3.0; // Minimum 3 goals per match
+}
 
 function loadDefenseWall() {
   minGF.value = 0;
@@ -2773,6 +2805,44 @@ function loadBTTSFocus() {
   //minOdds.value = 1.30;
   //maxOdds.value = 3.0;
 }
+function loadCompBot() {
+  const filtered = matches.value.filter((match) => {
+    const homeWinRate = (match.home_form?.wins || 0) / ((match.home_form?.wins || 0) + (match.home_form?.draws || 0) + (match.home_form?.losses || 0)) * 100;
+    const awayWinRate = (match.away_form?.wins || 0) / ((match.away_form?.wins || 0) + (match.away_form?.draws || 0) + (match.away_form?.losses || 0)) * 100;
+    const maxWinRate = Math.max(homeWinRate, awayWinRate);
+
+    const oddsHome = match.odds?.full_time_result?.home;
+    const oddsAway = match.odds?.full_time_result?.away;
+
+    return maxWinRate >= 60 && (
+      (oddsHome && oddsHome >= 1.3 && oddsHome <= 2.0) ||
+      (oddsAway && oddsAway >= 1.3 && oddsAway <= 2.0)
+    );
+  });
+
+  const homeWinMatches = filtered.filter(match => {
+    const oddsHome = match.odds?.full_time_result?.home;
+    return oddsHome && oddsHome >= 1.3 && oddsHome <= 2.0;
+  }).slice(0, 1); // 1 Home Win
+
+  const awayWinMatches = filtered.filter(match => {
+    const oddsAway = match.odds?.full_time_result?.away;
+    return oddsAway && oddsAway >= 1.3 && oddsAway <= 2.0;
+  }).slice(0, 1); // 1 Away Win
+
+  const ggMatches = filtered.filter(match => {
+    const homeAvg = match.home_form?.avg_goals_scored || 0;
+    const awayAvg = match.away_form?.avg_goals_scored || 0;
+    return homeAvg >= 1.2 && awayAvg >= 1.2;
+  }).slice(0, 1); // 1 GG Match
+
+  const over25Matches = filtered.filter(match => {
+    return (match.avg_goals || 0) >= 2.5;
+  }).slice(0, 1); // 1 Over 2.5 Match
+
+  selectedMatches.value = [...homeWinMatches, ...awayWinMatches, ...ggMatches, ...over25Matches];
+}
+
 
 // Load on mount
 onMounted(() => {
