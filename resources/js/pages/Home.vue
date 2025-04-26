@@ -817,7 +817,24 @@
 <button @click="loadSafeFavorites" class="rounded bg-lime-500 text-white px-3 py-1 text-sm hover:bg-lime-600 transition">
   ✅ Safe Favorites
 </button>
+<!-- Strong Over 2.5 Goals Button -->
+<button @click="loadStrongOver25Goals" class="rounded bg-yellow-500 text-white px-3 py-1 text-sm hover:bg-yellow-600 transition">
+  ⚡ Strong Over 2.5
+</button>
 
+<!-- Monster Over 3.5 Goals Button -->
+<button @click="loadMonsterOver35Goals" class="rounded bg-rose-500 text-white px-3 py-1 text-sm hover:bg-rose-600 transition">
+  🧨 Monster Over 3.5
+</button>
+<!-- Strong GG Button (1 GG) -->
+<button @click="loadStrongGG" class="rounded bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600 transition">
+  🎯 Strong GG (1GG)
+</button>
+
+<!-- Monster GG Button (2 GG) -->
+<button @click="loadMonsterGG" class="rounded bg-blue-500 text-white px-3 py-1 text-sm hover:bg-blue-600 transition">
+  🚀 Monster GG (2GG)
+</button>
 
 
   </div>
@@ -2715,6 +2732,19 @@ function loadCrazyGoalFest() {
   minHomeGA.value = 30;
   minAwayGA.value = 30;
 }
+function loadStrongOver25Goals() {
+  minGF.value = 50;          // Total goals for must be high
+  minHomeGA.value = 20;       // Home team concedes some goals
+  minAwayGA.value = 20;       // Away team concedes some goals
+  minAvgGoals.value = 2.7;    // Minimum average goals per match: 2.7
+}
+function loadMonsterOver35Goals() {
+  minGF.value = 60;           // Super high scoring teams
+  minHomeGA.value = 30;       // Home concedes enough
+  minAwayGA.value = 30;       // Away concedes enough
+  minAvgGoals.value = 3.5;     // Minimum average goals per match: 3.5
+}
+
 function loadDefenseWall() {
   minGF.value = 0;
   minHomeGA.value = 0;
